@@ -1,0 +1,35 @@
+{
+	"name": "dependency-injection-library",
+	"version": "0.0.1",
+	"description": "A library for dependency injection",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"require": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.cjs"
+		},
+		"import": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.es.js"
+		}
+	},
+	"scripts": {
+		"test": "vitest",
+		"build": "vite build",
+		"format": "biome format --write",
+		"lint": "biome check"
+	},
+	"keywords": [],
+	"author": "",
+	"packageManager": "pnpm@10.14.0",
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.3",
+		"@types/node": "^24.3.1",
+		"typescript": "^5.9.2",
+		"unplugin-dts": "1.0.0-beta.6",
+		"vite": "^7.1.4",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.4"
+	}
+}
