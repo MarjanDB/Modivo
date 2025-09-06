@@ -1,57 +1,44 @@
-import type { DependencyConstructionMethod } from "@lib/lib/DependencyRepresentation/DependencyConstructionMethod.js";
-import type { DependencyEntry } from "@lib/lib/DependencyRepresentation/DependencyEntry.js";
-import type { DependencyTokenDefinition } from "@lib/lib/DependencyRepresentation/DependencyTokenDefinition.js";
+import { ContainerProviderLookup } from "@lib/lib/Container/ContainerProviderLookup.js";
 import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import type { ProviderDefinition } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
+import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 export class ContainerRepresentation {
-	private readonly mapOfDependencyTokenToDependencyEntry: Map<DependencyTokenDefinition, DependencyEntry<unknown[]>> =
-		new Map();
+	public constructor(
+		private readonly providerScopeLookup = new Map<ProviderIdentifier, DependencyScope>(),
+		private readonly providerLookupForSingletonDependencies = new ContainerProviderLookup(),
+		private readonly providerLookupForTransientDependencies = new ContainerProviderLookup(),
+	) {}
 
-	private readonly resolvedValuesForSingletonDependencies: Map<
-		DependencyTokenDefinition,
-		DependencyConstructionMethod
-	> = new Map();
-
-	private readonly resolversForTransientDependencies: Map<DependencyTokenDefinition, DependencyConstructionMethod> =
-		new Map();
-
-	public registerDependency(dependencyEntry: DependencyEntry): void {
-		this.mapOfDependencyTokenToDependencyEntry.set(dependencyEntry.token, dependencyEntry);
+	public registerDependency<FactoryArguments extends unknown[] = unknown[]>(
+		dependencyEntry: ProviderDefinition<FactoryArguments>,
+	): void {
+		const generalCastOfDependencyEntry = dependencyEntry as ProviderDefinition<unknown[]>;
 
 		if (dependencyEntry.scope === DependencyScope.SINGLETON) {
-			this.resolvedValuesForSingletonDependencies.set(dependencyEntry.token, dependencyEntry.constructionMethod);
+			this.providerLookupForSingletonDependencies.registerDependency(generalCastOfDependencyEntry);
+			this.providerScopeLookup.set(dependencyEntry.token, DependencyScope.SINGLETON);
 			return;
 		}
 
 		if (dependencyEntry.scope === DependencyScope.TRANSIENT) {
-			this.resolversForTransientDependencies.set(dependencyEntry.token, dependencyEntry.constructionMethod);
+			this.providerLookupForTransientDependencies.registerDependency(generalCastOfDependencyEntry);
+			this.providerScopeLookup.set(dependencyEntry.token, DependencyScope.TRANSIENT);
 			return;
 		}
 	}
 
-	public lookupDependencyEntry(dependencyToken: DependencyTokenDefinition): DependencyEntry | null {
-		return this.mapOfDependencyTokenToDependencyEntry.get(dependencyToken) ?? null;
-	}
+	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
+		const scope = this.providerScopeLookup.get(dependencyToken);
 
-	public resolveDependencyConstructorMethod(
-		dependencyToken: DependencyTokenDefinition,
-	): DependencyConstructionMethod | null {
-		const resolvedDependencyEntry = this.mapOfDependencyTokenToDependencyEntry.get(dependencyToken);
-
-		if (!resolvedDependencyEntry) {
-			return null;
+		if (scope === DependencyScope.SINGLETON) {
+			return this.providerLookupForSingletonDependencies.lookupDependencyEntry(dependencyToken);
 		}
 
-		const dependencyScope = resolvedDependencyEntry.scope;
-
-		if (dependencyScope === DependencyScope.SINGLETON) {
-			return this.resolvedValuesForSingletonDependencies.get(dependencyToken) ?? null;
+		if (scope === DependencyScope.TRANSIENT) {
+			return this.providerLookupForTransientDependencies.lookupDependencyEntry(dependencyToken);
 		}
 
-		if (dependencyScope === DependencyScope.TRANSIENT) {
-			return this.resolversForTransientDependencies.get(dependencyToken) ?? null;
-		}
-
-		throw new Error(`Dependency ${dependencyToken} has an invalid scope`);
+		return null;
 	}
 }

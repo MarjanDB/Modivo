@@ -1,7 +1,7 @@
 import type { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/Container/ContainerResolver.js";
-import type { DependencyTokenDefinition } from "@lib/lib/DependencyRepresentation/DependencyTokenDefinition.js";
 import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 export class Container {
 	private readonly containerResolver: ContainerResolver;
@@ -10,9 +10,9 @@ export class Container {
 		this.containerResolver = new ContainerResolver(this);
 	}
 
-	private readonly resolvedSingletoneDependencies: Map<DependencyTokenDefinition, unknown> = new Map();
+	private readonly resolvedSingletoneDependencies: Map<ProviderIdentifier, unknown> = new Map();
 
-	public resolveDependency(dependencyToken: DependencyTokenDefinition): unknown {
+	public resolveDependency(dependencyToken: ProviderIdentifier): unknown {
 		const dependencyEntry = this.containerRepresentation.lookupDependencyEntry(dependencyToken);
 
 		if (!dependencyEntry) {

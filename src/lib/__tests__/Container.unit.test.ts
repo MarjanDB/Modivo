@@ -1,27 +1,31 @@
 import { Container } from "@lib/lib/Container/Container.js";
 import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
-import {
-	DependencyConstructionMethodClass,
-	DependencyConstructionMethodFactory,
-	DependencyConstructionMethodValue,
-} from "@lib/lib/DependencyRepresentation/DependencyConstructionMethod.js";
-import { DependencyEntry } from "@lib/lib/DependencyRepresentation/DependencyEntry.js";
-import {
-	DependencyTokenSymbolDefinition,
-	type DependencyTokenType,
-} from "@lib/lib/DependencyRepresentation/DependencyTokenDefinition.js";
 import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import {
+	ProviderConstructionMethodForClass,
+	ProviderConstructionMethodForFactory,
+	ProviderConstructionMethodForValue,
+} from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
+import {
+	ProviderDefinitionForClass,
+	ProviderDefinitionForFunction,
+	ProviderDefinitionForValue,
+} from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
+import { ProviderDependencyForFunction } from "@lib/lib/ProviderRepresentation/ProviderDependency.js";
+import {
+	type DependencyTokenType,
+	ProviderIdentifierAsSymbol,
+} from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 describe("Container", () => {
 	it("should resolve a value dependency", () => {
 		const containerRepresentation = new ContainerRepresentation();
 
-		const dependencyToken = new DependencyTokenSymbolDefinition(Symbol.for("dependency") as DependencyTokenType);
-		const dependencyEntry = new DependencyEntry(
+		const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+		const dependencyEntry = new ProviderDefinitionForValue(
 			dependencyToken,
-			new DependencyConstructionMethodValue(1),
+			new ProviderConstructionMethodForValue(1),
 			DependencyScope.SINGLETON,
-			[],
 		);
 		containerRepresentation.registerDependency(dependencyEntry);
 
@@ -36,10 +40,10 @@ describe("Container", () => {
 
 		const classType = class TestClass {};
 
-		const dependencyToken = new DependencyTokenSymbolDefinition(Symbol.for("dependency") as DependencyTokenType);
-		const dependencyEntry = new DependencyEntry(
+		const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+		const dependencyEntry = new ProviderDefinitionForClass(
 			dependencyToken,
-			new DependencyConstructionMethodClass(classType),
+			new ProviderConstructionMethodForClass(classType),
 			DependencyScope.SINGLETON,
 			[],
 		);
@@ -54,34 +58,35 @@ describe("Container", () => {
 		expect(resolvedDependency2).toBe(resolvedDependency1);
 	});
 
-	it("should resolve a factory dependency with dependencies", () => {
+	it("should resolve a factory dependency with dependencies in correct order", () => {
 		const containerRepresentation = new ContainerRepresentation();
 
-		const dependencyToken1 = new DependencyTokenSymbolDefinition(Symbol.for("dependency1") as DependencyTokenType);
-		const dependencyToken2 = new DependencyTokenSymbolDefinition(Symbol.for("dependency2") as DependencyTokenType);
+		const dependencyToken1 = new ProviderIdentifierAsSymbol(Symbol.for("dependency1") as DependencyTokenType);
+		const dependencyToken2 = new ProviderIdentifierAsSymbol(Symbol.for("dependency2") as DependencyTokenType);
 
-		const dependencyEntry1 = new DependencyEntry(
+		const dependencyEntry1 = new ProviderDefinitionForValue(
 			dependencyToken1,
-			new DependencyConstructionMethodValue(1),
+			new ProviderConstructionMethodForValue(1),
 			DependencyScope.SINGLETON,
-			[],
 		);
 
-		const dependencyEntry2 = new DependencyEntry(
+		const dependencyEntry2 = new ProviderDefinitionForValue(
 			dependencyToken2,
-			new DependencyConstructionMethodValue(2),
+			new ProviderConstructionMethodForValue(2),
 			DependencyScope.SINGLETON,
-			[],
 		);
 
-		const dependencyToken = new DependencyTokenSymbolDefinition(Symbol.for("dependency") as DependencyTokenType);
-		const dependencyEntry = new DependencyEntry(
+		const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+		const dependencyEntry = new ProviderDefinitionForFunction(
 			dependencyToken,
-			new DependencyConstructionMethodFactory((dependency1: number, dependency2: number): number => {
-				return dependency1 + dependency2;
+			new ProviderConstructionMethodForFactory((dependency1: number, dependency2: number): number => {
+				return dependency1 / dependency2;
 			}),
 			DependencyScope.SINGLETON,
-			[dependencyToken1, dependencyToken2],
+			[
+				new ProviderDependencyForFunction(0, dependencyToken1),
+				new ProviderDependencyForFunction(1, dependencyToken2),
+			],
 		);
 
 		containerRepresentation.registerDependency(dependencyEntry1);
@@ -91,6 +96,6 @@ describe("Container", () => {
 		const container = new Container(containerRepresentation);
 
 		const resolvedDependency = container.resolveDependency(dependencyToken);
-		expect(resolvedDependency).toBe(3);
+		expect(resolvedDependency).toBe(0.5);
 	});
 });
