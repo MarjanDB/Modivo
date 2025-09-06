@@ -30,12 +30,6 @@ export class ProviderTicketForValue<Identifier extends ProviderIdentifier, Scope
 	public withValue<NewValue>(value: NewValue): ProviderTicketForValue<Identifier, Scope, NewValue> {
 		return new ProviderTicketForValue(this.token, this.scope, value);
 	}
-
-	public withToken<NewIdentifier extends ProviderIdentifier>(
-		token: NewIdentifier,
-	): ProviderTicketForValue<NewIdentifier, Scope, Value> {
-		return new ProviderTicketForValue(token, this.scope, this.value);
-	}
 }
 
 export class ProviderTicketForFunction<
@@ -88,21 +82,52 @@ export class ProviderTicketForAsyncFunction<
 
 	public withScope<NewScope extends ProviderScope>(
 		scope: NewScope,
-	): ProviderTicketForFunction<Identifier, NewScope, FactoryArguments, FactorySignature, FactoryReturn> {
-		return new ProviderTicketForFunction(this.token, scope, this.factory, this.dependencies);
+	): ProviderTicketForAsyncFunction<Identifier, NewScope, FactoryArguments, FactorySignature, FactoryReturn> {
+		return new ProviderTicketForAsyncFunction(this.token, scope, this.factory, this.dependencies);
 	}
 
-	public withFactory<NewFactorySignature extends (...args: unknown[]) => Promise<NonNullable<unknown>>>(
+	// biome-ignore lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments
+	public withFactory<NewFactorySignature extends (...args: any[]) => Promise<NonNullable<unknown>>>(
 		factory: NewFactorySignature,
 		dependencies: DependencyTypes<Parameters<NewFactorySignature>, Identifier>,
-	): ProviderTicketForFunction<
+	): ProviderTicketForAsyncFunction<
 		Identifier,
 		Scope,
 		Parameters<NewFactorySignature>,
 		NewFactorySignature,
 		ReturnType<NewFactorySignature>
 	> {
-		return new ProviderTicketForFunction(this.token, this.scope, factory, dependencies);
+		return new ProviderTicketForAsyncFunction(this.token, this.scope, factory, dependencies);
+	}
+}
+
+export class ProviderTicketForClass<
+	Identifier extends ProviderIdentifier,
+	Scope extends ProviderScope,
+	ClassConstructor extends new (
+		...args: unknown[]
+	) => unknown,
+	ClassInstance extends InstanceType<ClassConstructor>,
+> {
+	public constructor(
+		public readonly token: Identifier,
+		public readonly scope: Scope,
+		public readonly classConstructor: ClassConstructor,
+		public readonly dependencies: DependencyTypes<ConstructorParameters<ClassConstructor>, Identifier>,
+	) {}
+
+	public withScope<NewScope extends ProviderScope>(
+		scope: NewScope,
+	): ProviderTicketForClass<Identifier, NewScope, ClassConstructor, ClassInstance> {
+		return new ProviderTicketForClass(this.token, scope, this.classConstructor, this.dependencies);
+	}
+
+	// biome-ignore lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments
+	public withClassConstructor<NewClassConstructor extends new (...args: any[]) => any>(
+		classConstructor: NewClassConstructor,
+		dependencies: DependencyTypes<ConstructorParameters<NewClassConstructor>, Identifier>,
+	): ProviderTicketForClass<Identifier, Scope, NewClassConstructor, InstanceType<NewClassConstructor>> {
+		return new ProviderTicketForClass(this.token, this.scope, classConstructor, dependencies);
 	}
 }
 
@@ -136,7 +161,8 @@ export class ProviderTicketMaster {
 
 	public static createTicketForAsyncFunction<
 		Identifier extends ProviderIdentifier,
-		FactorySignature extends (...args: unknown[]) => Promise<NonNullable<unknown>>,
+		// biome-ignore lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments
+		FactorySignature extends (...args: any[]) => Promise<NonNullable<unknown>>,
 	>(
 		token: Identifier,
 		factory: FactorySignature,
@@ -149,5 +175,21 @@ export class ProviderTicketMaster {
 		ReturnType<FactorySignature>
 	> {
 		return new ProviderTicketForAsyncFunction(token, ProviderScope.SINGLETON, factory, dependencies);
+	}
+
+	public static createTicketForClass<
+		Identifier extends ProviderIdentifier,
+		ClassConstructor extends new (
+			// biome-ignore lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments
+			...args: any[]
+			// biome-ignore lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments
+		) => any,
+		ClassInstance extends InstanceType<ClassConstructor>,
+	>(
+		token: Identifier,
+		classConstructor: ClassConstructor,
+		dependencies: DependencyTypes<ConstructorParameters<ClassConstructor>, Identifier>,
+	): ProviderTicketForClass<Identifier, typeof ProviderScope.SINGLETON, ClassConstructor, ClassInstance> {
+		return new ProviderTicketForClass(token, ProviderScope.SINGLETON, classConstructor, dependencies);
 	}
 }
