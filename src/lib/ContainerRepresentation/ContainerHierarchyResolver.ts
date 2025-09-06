@@ -1,4 +1,4 @@
-import type { Container } from "@lib/lib/Container/Container.js";
+import type { Container } from "@lib/lib/ContainerRepresentation/Container.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 export class ContainerHierarchyResolver {

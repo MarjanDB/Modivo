@@ -1,4 +1,4 @@
-import type { Container } from "@lib/lib/Container/Container.js";
+import type { Container } from "@lib/lib/ContainerRepresentation/Container.js";
 import { ProviderConstructionMethodForAsyncFactory } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
 import {
 	ProviderDefinitionForAsyncFunction,

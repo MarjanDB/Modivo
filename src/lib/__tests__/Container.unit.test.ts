@@ -1,5 +1,5 @@
-import { Container } from "@lib/lib/Container/Container.js";
-import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
+import { Container } from "@lib/lib/ContainerRepresentation/Container.js";
+import { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
 import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import {
 	ProviderConstructionMethodForClass,

@@ -1,4 +1,4 @@
-import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
+import { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
 import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import { ProviderConstructionMethodForValue } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
 import { ProviderDefinitionForValue } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
