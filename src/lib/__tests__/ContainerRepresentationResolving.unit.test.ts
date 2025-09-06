@@ -17,6 +17,7 @@ describe("ContainerRepresentationResolving", () => {
 			dependencyToken,
 			new DependencyConstructionMethodValue(1),
 			DependencyScope.SINGLETON,
+			[],
 		);
 		containerEntry.registerDependency(dependencyEntry);
 

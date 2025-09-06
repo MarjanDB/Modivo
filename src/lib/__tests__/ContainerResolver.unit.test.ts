@@ -1,3 +1,4 @@
+import { Container } from "@lib/lib/Container/Container.js";
 import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/Container/ContainerResolver.js";
 import { DependencyConstructionMethodValue } from "@lib/lib/DependencyRepresentation/DependencyConstructionMethod.js";
@@ -12,7 +13,7 @@ describe("ContainerResolver", () => {
 	it("should resolve a value dependency", () => {
 		const containerRepresentation = new ContainerRepresentation();
 
-		const containerResolver = new ContainerResolver(containerRepresentation);
+		const containerResolver = new ContainerResolver(new Container(containerRepresentation));
 
 		const dependencyToken = new DependencyTokenSymbolDefinition(Symbol.for("dependency") as DependencyTokenType);
 
@@ -20,6 +21,7 @@ describe("ContainerResolver", () => {
 			dependencyToken,
 			new DependencyConstructionMethodValue(1),
 			DependencyScope.SINGLETON,
+			[],
 		);
 		containerRepresentation.registerDependency(dependencyEntry);
 

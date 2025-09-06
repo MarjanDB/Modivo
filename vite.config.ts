@@ -32,5 +32,6 @@ export default defineConfig({
 		coverage: {
 			reporter: ["text", "html"],
 		},
+		watch: false,
 	},
 });

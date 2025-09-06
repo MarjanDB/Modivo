@@ -1,29 +1,61 @@
-import type { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
+import type { Container } from "@lib/lib/Container/Container.js";
 import {
 	DependencyConstructionMethodAsyncFactory,
 	DependencyConstructionMethodClass,
 	DependencyConstructionMethodFactory,
 	DependencyConstructionMethodValue,
 } from "@lib/lib/DependencyRepresentation/DependencyConstructionMethod.js";
+import type { DependencyEntry } from "@lib/lib/DependencyRepresentation/DependencyEntry.js";
 import type { DependencyTokenDefinition } from "@lib/lib/DependencyRepresentation/DependencyTokenDefinition.js";
 
 export class ContainerResolver {
-	public constructor(public readonly containerRepresentation: ContainerRepresentation) {}
+	public constructor(public readonly container: Container) {}
+
+	private resolveValueDependency(dependencyConstructorMethod: DependencyConstructionMethodValue): unknown {
+		return dependencyConstructorMethod.value;
+	}
+
+	private resolveFactoryDependency(
+		dependencyConstructorMethod: DependencyConstructionMethodFactory,
+		dependencyEntry: DependencyEntry,
+	): unknown {
+		const resolvedDependencies = dependencyEntry.dependencies.map((dependencyToken) => {
+			return this.resolveDependency(dependencyToken);
+		});
+
+		return dependencyConstructorMethod.factory(...resolvedDependencies);
+	}
+
+	private resolveClassDependency(dependencyConstructorMethod: DependencyConstructionMethodClass): unknown {
+		return new dependencyConstructorMethod.classType();
+	}
+
+	private resolveAsyncFactoryDependency(
+		dependencyConstructorMethod: DependencyConstructionMethodAsyncFactory,
+		dependencyEntry: DependencyEntry,
+	): Promise<unknown> {
+		const resolvedDependencies = dependencyEntry.dependencies.map((dependencyToken) => {
+			return this.resolveDependency(dependencyToken);
+		});
+
+		return dependencyConstructorMethod.factory(...resolvedDependencies);
+	}
 
 	public resolveDependency(dependencyToken: DependencyTokenDefinition): unknown {
-		const dependencyConstructorMethod =
-			this.containerRepresentation.resolveDependencyConstructorMethod(dependencyToken);
+		const dependencyEntry = this.container.containerRepresentation.lookupDependencyEntry(dependencyToken);
 
-		if (!dependencyConstructorMethod) {
+		if (!dependencyEntry) {
 			throw new Error(`Dependency ${dependencyToken} not found`);
 		}
 
+		const dependencyConstructorMethod = dependencyEntry.constructionMethod;
+
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodValue) {
-			return dependencyConstructorMethod.value;
+			return this.resolveValueDependency(dependencyConstructorMethod);
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodFactory) {
-			return dependencyConstructorMethod.factory();
+			return this.resolveFactoryDependency(dependencyConstructorMethod, dependencyEntry);
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodAsyncFactory) {
@@ -31,34 +63,35 @@ export class ContainerResolver {
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodClass) {
-			return new dependencyConstructorMethod.classType();
+			return this.resolveClassDependency(dependencyConstructorMethod);
 		}
 
 		return dependencyConstructorMethod;
 	}
 
 	public async resolveDependencyAsync(dependencyToken: DependencyTokenDefinition): Promise<unknown> {
-		const dependencyConstructorMethod =
-			this.containerRepresentation.resolveDependencyConstructorMethod(dependencyToken);
+		const dependencyEntry = this.container.containerRepresentation.lookupDependencyEntry(dependencyToken);
 
-		if (!dependencyConstructorMethod) {
+		if (!dependencyEntry) {
 			throw new Error(`Dependency ${dependencyToken} not found`);
 		}
 
+		const dependencyConstructorMethod = dependencyEntry.constructionMethod;
+
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodAsyncFactory) {
-			return await dependencyConstructorMethod.factory();
+			return await this.resolveAsyncFactoryDependency(dependencyConstructorMethod, dependencyEntry);
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodValue) {
-			return dependencyConstructorMethod.value;
+			return this.resolveValueDependency(dependencyConstructorMethod);
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodFactory) {
-			return dependencyConstructorMethod.factory();
+			return this.resolveFactoryDependency(dependencyConstructorMethod, dependencyEntry);
 		}
 
 		if (dependencyConstructorMethod instanceof DependencyConstructionMethodClass) {
-			return new dependencyConstructorMethod.classType();
+			return this.resolveClassDependency(dependencyConstructorMethod);
 		}
 
 		return dependencyConstructorMethod;

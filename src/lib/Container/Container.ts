@@ -7,7 +7,7 @@ export class Container {
 	private readonly containerResolver: ContainerResolver;
 
 	public constructor(public readonly containerRepresentation: ContainerRepresentation) {
-		this.containerResolver = new ContainerResolver(containerRepresentation);
+		this.containerResolver = new ContainerResolver(this);
 	}
 
 	private readonly resolvedSingletoneDependencies: Map<DependencyTokenDefinition, unknown> = new Map();
