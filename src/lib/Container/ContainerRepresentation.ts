@@ -28,6 +28,22 @@ export class ContainerRepresentation {
 		}
 	}
 
+	public overrideDependency<FactoryArguments extends unknown[] = unknown[]>(
+		dependencyEntry: ProviderDefinition<FactoryArguments>,
+	): void {
+		const generalCastOfDependencyEntry = dependencyEntry as ProviderDefinition<unknown[]>;
+
+		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
+			this.providerLookupForSingletonDependencies.overrideDependency(generalCastOfDependencyEntry);
+			return;
+		}
+
+		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
+			this.providerLookupForTransientDependencies.overrideDependency(generalCastOfDependencyEntry);
+			return;
+		}
+	}
+
 	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
 		const scope = this.providerScopeLookup.get(dependencyToken);
 

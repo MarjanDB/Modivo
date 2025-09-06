@@ -46,6 +46,26 @@ export class ContainerProviderLookup {
 		}
 	}
 
+	public overrideDependency(dependencyEntry: ProviderDefinition<unknown[]>): void {
+		if (!this.mapOfDependencyTokenToDependencyEntry.has(dependencyEntry.token)) {
+			throw new Error(`Dependency ${dependencyEntry.token} not yet registered. Use registerDependency instead.`);
+		}
+
+		this.mapOfDependencyTokenToDependencyEntry.set(dependencyEntry.token, dependencyEntry);
+
+		if (dependencyEntry instanceof ProviderDefinitionForFunction) {
+			this.mapOfDependencyTokenToDependencyEntryForFactory.set(dependencyEntry.token, dependencyEntry);
+		}
+
+		if (dependencyEntry instanceof ProviderDefinitionForValue) {
+			this.mapOfDependencyTokenToDependencyEntryForValue.set(dependencyEntry.token, dependencyEntry);
+		}
+
+		if (dependencyEntry instanceof ProviderDefinitionForClass) {
+			this.mapOfDependencyTokenToDependencyEntryForClass.set(dependencyEntry.token, dependencyEntry);
+		}
+	}
+
 	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
 		return this.mapOfDependencyTokenToDependencyEntry.get(dependencyToken) ?? null;
 	}

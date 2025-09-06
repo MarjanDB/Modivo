@@ -7,7 +7,7 @@ import {
 	ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
-describe("ContainerRepresentationResolving", () => {
+describe("ContainerRepresentation", () => {
 	it("should resolve a value dependency", () => {
 		const containerEntry = new ContainerRepresentation();
 

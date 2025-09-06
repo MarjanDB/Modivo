@@ -35,6 +35,30 @@ describe("Container", () => {
 		expect(resolvedDependency).toBe(1);
 	});
 
+	it("should be possible to override a value dependency", () => {
+		const containerRepresentation = new ContainerRepresentation();
+
+		const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+		const dependencyEntry = new ProviderDefinitionForValue(
+			dependencyToken,
+			new ProviderConstructionMethodForValue(1),
+			ProviderScope.SINGLETON,
+		);
+		containerRepresentation.registerDependency(dependencyEntry);
+
+		const dependencyEntry2 = new ProviderDefinitionForValue(
+			dependencyToken,
+			new ProviderConstructionMethodForValue(2),
+			ProviderScope.SINGLETON,
+		);
+		containerRepresentation.overrideDependency(dependencyEntry2);
+
+		const container = new Container(containerRepresentation);
+
+		const resolvedDependency = container.resolveDependency(dependencyToken);
+		expect(resolvedDependency).toBe(2);
+	});
+
 	it("should resolve a class dependency and return the same instance on multiple calls", () => {
 		const containerRepresentation = new ContainerRepresentation();
 
