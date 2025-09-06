@@ -1,6 +1,6 @@
 import { Container } from "@lib/lib/Container/Container.js";
 import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
-import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import {
 	ProviderConstructionMethodForClass,
 	ProviderConstructionMethodForFactory,
@@ -25,7 +25,7 @@ describe("Container", () => {
 		const dependencyEntry = new ProviderDefinitionForValue(
 			dependencyToken,
 			new ProviderConstructionMethodForValue(1),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 		containerRepresentation.registerDependency(dependencyEntry);
 
@@ -44,7 +44,7 @@ describe("Container", () => {
 		const dependencyEntry = new ProviderDefinitionForClass(
 			dependencyToken,
 			new ProviderConstructionMethodForClass(classType),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 			[],
 		);
 		containerRepresentation.registerDependency(dependencyEntry);
@@ -74,20 +74,20 @@ describe("Container", () => {
 		const dependencyEntry1 = new ProviderDefinitionForValue(
 			dependencyToken1,
 			new ProviderConstructionMethodForValue(1),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 
 		const dependencyToken2 = new ProviderIdentifierAsSymbol(Symbol.for("dependency2") as DependencyTokenType);
 		const dependencyEntry2 = new ProviderDefinitionForValue(
 			dependencyToken2,
 			new ProviderConstructionMethodForValue(2),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 
 		const dependencyEntry = new ProviderDefinitionForClass(
 			providerToken,
 			new ProviderConstructionMethodForClass(classType),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 			[
 				new ProviderDependencyForFunction(0, dependencyToken1),
 				new ProviderDependencyForFunction(1, dependencyToken2),
@@ -116,13 +116,13 @@ describe("Container", () => {
 		const dependencyEntry1 = new ProviderDefinitionForValue(
 			dependencyToken1,
 			new ProviderConstructionMethodForValue(1),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 
 		const dependencyEntry2 = new ProviderDefinitionForValue(
 			dependencyToken2,
 			new ProviderConstructionMethodForValue(2),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 
 		const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
@@ -131,7 +131,7 @@ describe("Container", () => {
 			new ProviderConstructionMethodForFactory((dependency1: number, dependency2: number): number => {
 				return dependency1 / dependency2;
 			}),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 			[
 				new ProviderDependencyForFunction(0, dependencyToken1),
 				new ProviderDependencyForFunction(1, dependencyToken2),

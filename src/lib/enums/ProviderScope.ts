@@ -1,4 +1,4 @@
-export enum DependencyScope {
+export enum ProviderScope {
 	SINGLETON = "singleton",
 	TRANSIENT = "transient",
 }

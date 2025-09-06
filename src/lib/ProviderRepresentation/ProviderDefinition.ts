@@ -1,4 +1,4 @@
-import type { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import type { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type {
 	ProviderConstructionMethodForAsyncFactory,
 	ProviderConstructionMethodForClass,
@@ -12,7 +12,7 @@ export class ProviderDefinitionForClass<ClassArguments extends unknown[] = unkno
 	public constructor(
 		public readonly token: ProviderIdentifier,
 		public readonly constructionMethod: ProviderConstructionMethodForClass<ClassArguments>,
-		public readonly scope: DependencyScope,
+		public readonly scope: ProviderScope,
 
 		// These are passed directly to the constructor
 		public readonly dependencies: ProviderDependencyForFunction[],
@@ -23,7 +23,7 @@ export class ProviderDefinitionForFunction<FactoryArguments extends unknown[] = 
 	public constructor(
 		public readonly token: ProviderIdentifier,
 		public readonly constructionMethod: ProviderConstructionMethodForFactory<FactoryArguments>,
-		public readonly scope: DependencyScope,
+		public readonly scope: ProviderScope,
 		public readonly dependencies: ProviderDependencyForFunction[],
 	) {}
 }
@@ -32,7 +32,7 @@ export class ProviderDefinitionForAsyncFunction<FactoryArguments extends unknown
 	public constructor(
 		public readonly token: ProviderIdentifier,
 		public readonly constructionMethod: ProviderConstructionMethodForAsyncFactory<FactoryArguments>,
-		public readonly scope: DependencyScope,
+		public readonly scope: ProviderScope,
 		public readonly dependencies: ProviderDependencyForFunction[],
 	) {}
 }
@@ -41,7 +41,7 @@ export class ProviderDefinitionForValue {
 	public constructor(
 		public readonly token: ProviderIdentifier,
 		public readonly constructionMethod: ProviderConstructionMethodForValue,
-		public readonly scope: DependencyScope,
+		public readonly scope: ProviderScope,
 	) {}
 }
 

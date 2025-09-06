@@ -1,11 +1,11 @@
 import { ContainerProviderLookup } from "@lib/lib/Container/ContainerProviderLookup.js";
-import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type { ProviderDefinition } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 export class ContainerRepresentation {
 	public constructor(
-		private readonly providerScopeLookup = new Map<ProviderIdentifier, DependencyScope>(),
+		private readonly providerScopeLookup = new Map<ProviderIdentifier, ProviderScope>(),
 		private readonly providerLookupForSingletonDependencies = new ContainerProviderLookup(),
 		private readonly providerLookupForTransientDependencies = new ContainerProviderLookup(),
 	) {}
@@ -15,15 +15,15 @@ export class ContainerRepresentation {
 	): void {
 		const generalCastOfDependencyEntry = dependencyEntry as ProviderDefinition<unknown[]>;
 
-		if (dependencyEntry.scope === DependencyScope.SINGLETON) {
+		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
 			this.providerLookupForSingletonDependencies.registerDependency(generalCastOfDependencyEntry);
-			this.providerScopeLookup.set(dependencyEntry.token, DependencyScope.SINGLETON);
+			this.providerScopeLookup.set(dependencyEntry.token, ProviderScope.SINGLETON);
 			return;
 		}
 
-		if (dependencyEntry.scope === DependencyScope.TRANSIENT) {
+		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
 			this.providerLookupForTransientDependencies.registerDependency(generalCastOfDependencyEntry);
-			this.providerScopeLookup.set(dependencyEntry.token, DependencyScope.TRANSIENT);
+			this.providerScopeLookup.set(dependencyEntry.token, ProviderScope.TRANSIENT);
 			return;
 		}
 	}
@@ -31,11 +31,11 @@ export class ContainerRepresentation {
 	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
 		const scope = this.providerScopeLookup.get(dependencyToken);
 
-		if (scope === DependencyScope.SINGLETON) {
+		if (scope === ProviderScope.SINGLETON) {
 			return this.providerLookupForSingletonDependencies.lookupDependencyEntry(dependencyToken);
 		}
 
-		if (scope === DependencyScope.TRANSIENT) {
+		if (scope === ProviderScope.TRANSIENT) {
 			return this.providerLookupForTransientDependencies.lookupDependencyEntry(dependencyToken);
 		}
 

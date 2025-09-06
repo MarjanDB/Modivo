@@ -1,7 +1,7 @@
 import { Container } from "@lib/lib/Container/Container.js";
 import { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/Container/ContainerResolver.js";
-import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import { ProviderConstructionMethodForValue } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
 import { ProviderDefinitionForValue } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import {
@@ -20,7 +20,7 @@ describe("ContainerResolver", () => {
 		const dependencyEntry = new ProviderDefinitionForValue(
 			dependencyToken,
 			new ProviderConstructionMethodForValue(1),
-			DependencyScope.SINGLETON,
+			ProviderScope.SINGLETON,
 		);
 		containerRepresentation.registerDependency(dependencyEntry);
 

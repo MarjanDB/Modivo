@@ -1,6 +1,6 @@
 import type { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/Container/ContainerResolver.js";
-import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
+import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
 export class Container {
@@ -19,7 +19,7 @@ export class Container {
 			throw new Error(`Dependency ${dependencyToken} not found`);
 		}
 
-		if (dependencyEntry.scope === DependencyScope.SINGLETON) {
+		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
 			if (this.resolvedSingletoneDependencies.has(dependencyToken)) {
 				return this.resolvedSingletoneDependencies.get(dependencyToken);
 			}
@@ -29,7 +29,7 @@ export class Container {
 			return resolvedDependency;
 		}
 
-		if (dependencyEntry.scope === DependencyScope.TRANSIENT) {
+		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
 			return this.containerResolver.resolveDependency(dependencyToken);
 		}
 
