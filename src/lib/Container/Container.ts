@@ -1,3 +1,4 @@
+import { ContainerHierarchyResolver } from "@lib/lib/Container/ContainerHierarchyResolver.js";
 import type { ContainerRepresentation } from "@lib/lib/Container/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/Container/ContainerResolver.js";
 import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
@@ -5,14 +6,22 @@ import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/Provide
 
 export class Container {
 	private readonly containerResolver: ContainerResolver;
-
-	public constructor(public readonly containerRepresentation: ContainerRepresentation) {
-		this.containerResolver = new ContainerResolver(this);
-	}
-
+	private readonly containerHierarchyResolver: ContainerHierarchyResolver;
 	private readonly resolvedSingletoneDependencies: Map<ProviderIdentifier, unknown> = new Map();
 
+	public constructor(
+		public readonly containerRepresentation: ContainerRepresentation,
+		public readonly parentContainer: Container | null = null,
+	) {
+		this.containerResolver = new ContainerResolver(this);
+		this.containerHierarchyResolver = new ContainerHierarchyResolver(this);
+	}
+
 	public resolveDependency(dependencyToken: ProviderIdentifier): unknown {
+		return this.containerHierarchyResolver.resolveDependency(dependencyToken);
+	}
+
+	public resolveLocalDependency(dependencyToken: ProviderIdentifier): unknown {
 		const dependencyEntry = this.containerRepresentation.lookupDependencyEntry(dependencyToken);
 
 		if (!dependencyEntry) {

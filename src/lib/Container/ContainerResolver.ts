@@ -21,7 +21,7 @@ export class ContainerResolver {
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveDependency(dependencyToken.dependencyToken);
 		});
 
 		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
@@ -33,7 +33,7 @@ export class ContainerResolver {
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveDependency(dependencyToken.dependencyToken);
 		});
 
 		return new providerDefinition.constructionMethod.classType(...resolvedDependencies);
@@ -45,7 +45,7 @@ export class ContainerResolver {
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveDependency(dependencyToken.dependencyToken);
 		});
 
 		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
