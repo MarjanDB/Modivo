@@ -58,6 +58,55 @@ describe("Container", () => {
 		expect(resolvedDependency2).toBe(resolvedDependency1);
 	});
 
+	it("should resolve class dependency with dependencies in correct order", () => {
+		const containerRepresentation = new ContainerRepresentation();
+
+		const classType = class TestClass {
+			public constructor(
+				public readonly dependency1: number,
+				public readonly dependency2: number,
+			) {}
+		};
+
+		const providerToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+
+		const dependencyToken1 = new ProviderIdentifierAsSymbol(Symbol.for("dependency1") as DependencyTokenType);
+		const dependencyEntry1 = new ProviderDefinitionForValue(
+			dependencyToken1,
+			new ProviderConstructionMethodForValue(1),
+			DependencyScope.SINGLETON,
+		);
+
+		const dependencyToken2 = new ProviderIdentifierAsSymbol(Symbol.for("dependency2") as DependencyTokenType);
+		const dependencyEntry2 = new ProviderDefinitionForValue(
+			dependencyToken2,
+			new ProviderConstructionMethodForValue(2),
+			DependencyScope.SINGLETON,
+		);
+
+		const dependencyEntry = new ProviderDefinitionForClass(
+			providerToken,
+			new ProviderConstructionMethodForClass(classType),
+			DependencyScope.SINGLETON,
+			[
+				new ProviderDependencyForFunction(0, dependencyToken1),
+				new ProviderDependencyForFunction(1, dependencyToken2),
+			],
+		);
+
+		containerRepresentation.registerDependency(dependencyEntry1);
+		containerRepresentation.registerDependency(dependencyEntry2);
+		containerRepresentation.registerDependency(dependencyEntry);
+
+		const container = new Container(containerRepresentation);
+
+		const resolvedDependency1 = container.resolveDependency(providerToken);
+		expect(resolvedDependency1).toBeInstanceOf(classType);
+
+		expect((resolvedDependency1 as InstanceType<typeof classType>).dependency1).toBe(1);
+		expect((resolvedDependency1 as InstanceType<typeof classType>).dependency2).toBe(2);
+	});
+
 	it("should resolve a factory dependency with dependencies in correct order", () => {
 		const containerRepresentation = new ContainerRepresentation();
 

@@ -28,7 +28,15 @@ export class ContainerResolver {
 	}
 
 	private resolveClassDependency(providerDefinition: ProviderDefinitionForClass): unknown {
-		return new providerDefinition.constructionMethod.classType();
+		const sortedDependencies = [...providerDefinition.dependencies].sort(
+			(a, b) => a.parameterIndex - b.parameterIndex,
+		);
+
+		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
+			return this.resolveDependency(dependencyToken.dependencyToken);
+		});
+
+		return new providerDefinition.constructionMethod.classType(...resolvedDependencies);
 	}
 
 	private resolveAsyncFactoryDependency(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {

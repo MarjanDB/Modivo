@@ -5,18 +5,17 @@ import type {
 	ProviderConstructionMethodForFactory,
 	ProviderConstructionMethodForValue,
 } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
-import type {
-	ProviderDependencyForClass,
-	ProviderDependencyForFunction,
-} from "@lib/lib/ProviderRepresentation/ProviderDependency.js";
+import type { ProviderDependencyForFunction } from "@lib/lib/ProviderRepresentation/ProviderDependency.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 
-export class ProviderDefinitionForClass {
+export class ProviderDefinitionForClass<ClassArguments extends unknown[] = unknown[]> {
 	public constructor(
 		public readonly token: ProviderIdentifier,
-		public readonly constructionMethod: ProviderConstructionMethodForClass,
+		public readonly constructionMethod: ProviderConstructionMethodForClass<ClassArguments>,
 		public readonly scope: DependencyScope,
-		public readonly dependencies: ProviderDependencyForClass[],
+
+		// These are passed directly to the constructor
+		public readonly dependencies: ProviderDependencyForFunction[],
 	) {}
 }
 
@@ -47,7 +46,7 @@ export class ProviderDefinitionForValue {
 }
 
 export type ProviderDefinition<FactoryArguments extends unknown[] = unknown[]> =
-	| ProviderDefinitionForClass
+	| ProviderDefinitionForClass<FactoryArguments>
 	| ProviderDefinitionForFunction<FactoryArguments>
 	| ProviderDefinitionForAsyncFunction<FactoryArguments>
 	| ProviderDefinitionForValue;

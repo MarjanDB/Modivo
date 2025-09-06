@@ -12,8 +12,8 @@ export class ProviderConstructionMethodForAsyncFactory<FactoryArguments extends 
 	public constructor(public readonly factory: (...args: FactoryArguments) => Promise<unknown>) {}
 }
 
-export class ProviderConstructionMethodForClass {
-	public constructor(public readonly classType: ConstructableClassType<unknown>) {}
+export class ProviderConstructionMethodForClass<ClassArguments extends unknown[] = unknown[]> {
+	public constructor(public readonly classType: ConstructableClassType<unknown, ClassArguments>) {}
 }
 
 export type ProviderConstructionMethod<FactoryArguments extends unknown[] = unknown[]> =
