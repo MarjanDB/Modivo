@@ -4,7 +4,8 @@ import type { DependencyTokenDefinition } from "@lib/lib/DependencyRepresentatio
 import { DependencyScope } from "@lib/lib/enums/DependencyScope.js";
 
 export class ContainerRepresentation {
-	private readonly mapOfDependencyTokenToDependencyEntry: Map<DependencyTokenDefinition, DependencyEntry> = new Map();
+	private readonly mapOfDependencyTokenToDependencyEntry: Map<DependencyTokenDefinition, DependencyEntry<unknown[]>> =
+		new Map();
 
 	private readonly resolvedValuesForSingletonDependencies: Map<
 		DependencyTokenDefinition,
