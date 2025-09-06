@@ -1,7 +1,7 @@
 {
-	"name": "dependency-injection-library",
+	"name": "Modivo",
 	"version": "0.0.1",
-	"description": "A library for dependency injection",
+	"description": "Dependency Injection Library",
 	"private": true,
 	"type": "module",
 	"exports": {
@@ -21,8 +21,12 @@
 		"format": "biome format --write",
 		"lint": "biome check"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"dependency-injection",
+		"di",
+		"ioc",
+		"inversion-of-control"
+	],
 	"packageManager": "pnpm@10.14.0",
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.3",
