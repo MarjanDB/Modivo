@@ -190,7 +190,7 @@ export type TypeForRegisteringFunction<FactorySignature extends (...args: unknow
 	identifier: string | symbol;
 	scope?: ProviderScope;
 	factory: FactorySignature;
-	dependencies: Parameters<FactorySignature> extends []
+	dependencies?: Parameters<FactorySignature> extends []
 		? never
 		: DependencyTypes<Parameters<FactorySignature>, ProviderIdentifier>;
 };
@@ -291,7 +291,7 @@ export class ProviderTicketMaster {
 
 		if (ProviderTicketMaster.isFunctionRegistration(registration)) {
 			const factory = registration.factory;
-			const dependencies = registration.dependencies || [];
+			const dependencies = registration.dependencies ?? [];
 			const ticket = ProviderTicketMaster.createTicketForFunction(
 				identifier,
 				factory,
