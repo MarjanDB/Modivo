@@ -2,6 +2,9 @@
 
 A lightweight, type-safe dependency injection library for TypeScript (JavaScript too).
 
+[![npm version](https://img.shields.io/npm/v/modivo.svg)](https://www.npmjs.com/package/modivo)
+
+
 ## Installation
 
 ```bash
