@@ -166,25 +166,18 @@ export type ProviderTicket<Identifier extends ProviderIdentifier, Scope extends 
 	| ProviderTicketForFunction<
 			Identifier,
 			Scope,
-			unknown[],
-			(...args: unknown[]) => NonNullable<ReturnType>,
+			any[],
+			(...args: any[]) => NonNullable<ReturnType>,
 			NonNullable<ReturnType>
 	  >
 	| ProviderTicketForAsyncFunction<
 			Identifier,
 			Scope,
-			unknown[],
-			(...args: unknown[]) => Promise<NonNullable<ReturnType>>,
+			any[],
+			(...args: any[]) => Promise<NonNullable<ReturnType>>,
 			Promise<NonNullable<ReturnType>>
 	  >
-	| ProviderTicketForClass<
-			Identifier,
-			Scope,
-			new (
-				...args: any[]
-			) => unknown,
-			InstanceType<new (...args: any[]) => unknown>
-	  >
+	| ProviderTicketForClass<Identifier, Scope, new (...args: any[]) => any, any>
 	| ProviderTicketForValue<Identifier, Scope, ReturnType>;
 
 export type TypeForRegisteringValue<Value> = {
@@ -197,7 +190,9 @@ export type TypeForRegisteringFunction<FactorySignature extends (...args: unknow
 	identifier: string | symbol;
 	scope?: ProviderScope;
 	factory: FactorySignature;
-	dependencies?: DependencyTypes<Parameters<FactorySignature>, ProviderIdentifier>;
+	dependencies: Parameters<FactorySignature> extends []
+		? never
+		: DependencyTypes<Parameters<FactorySignature>, ProviderIdentifier>;
 };
 
 export type TypeForRegisteringAsyncFunction<
