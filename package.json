@@ -1,9 +1,19 @@
 {
-	"name": "Modivo",
+	"name": "modivo",
 	"version": "0.0.1",
 	"description": "Dependency Injection Library",
+	"author": {
+		"name": "Mario Močnik"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MarjanDB/Modivo.git"
+	},
 	"private": true,
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"exports": {
 		"require": {
 			"types": "./dist/index.d.ts",
@@ -32,6 +42,7 @@
 		"@biomejs/biome": "^2.2.3",
 		"@types/node": "^24.3.1",
 		"@vitest/coverage-v8": "^3.2.4",
+		"Modivo": "link:.",
 		"typescript": "^5.9.2",
 		"unplugin-dts": "1.0.0-beta.6",
 		"vite": "^7.1.4",

@@ -17,6 +17,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4(@types/node@24.3.1))
+      Modivo:
+        specifier: 'link:'
+        version: 'link:'
       typescript:
         specifier: ^5.9.2
         version: 5.9.2

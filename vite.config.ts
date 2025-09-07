@@ -15,9 +15,9 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: "./src/index.ts",
-			name: "DependencyInjectionLibrary",
+			name: "Modivo",
 			formats: ["es", "cjs", "umd"],
-			fileName: (format) => `dependency-injection-library.${format}.js`,
+			fileName: (format) => `index.${format}.js`,
 		},
 		rollupOptions: {
 			// Externalize deps that shouldn't be bundled
@@ -30,13 +30,5 @@ export default defineConfig({
 		outDir: "dist",
 		emptyOutDir: true,
 		target: "esnext",
-	},
-	test: {
-		environment: "node",
-		globals: true,
-		coverage: {
-			reporter: ["text", "html"],
-		},
-		watch: false,
 	},
 });
