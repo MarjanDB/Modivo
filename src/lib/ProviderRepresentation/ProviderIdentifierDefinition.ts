@@ -18,3 +18,15 @@ export class ProviderIdentifierAsClass {
 export type ProviderIdentifier = ProviderIdentifierAsSymbol | ProviderIdentifierAsString | ProviderIdentifierAsClass;
 
 export type PropertyIdentifier = ProviderIdentifierAsString | ProviderIdentifierAsSymbol;
+
+export function createProviderIdentifier(identifier: string | symbol | ClassType<unknown>): ProviderIdentifier {
+	if (typeof identifier === "string") {
+		return new ProviderIdentifierAsString(identifier);
+	}
+
+	if (typeof identifier === "symbol") {
+		return new ProviderIdentifierAsSymbol(identifier as DependencyTokenType);
+	}
+
+	return new ProviderIdentifierAsClass(identifier);
+}
