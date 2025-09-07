@@ -1,5 +1,4 @@
-import { ContainerBuilder } from "@lib/lib/UsageImplementation/ContainerBuilder.js";
-import { ProviderTicketMaster } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
+import { ContainerBuilder, ProviderTicketMaster } from "@lib/index.js";
 
 describe("SingleGlobalContainer", () => {
 	it("supports a global container that can be used to resolve providers", () => {
