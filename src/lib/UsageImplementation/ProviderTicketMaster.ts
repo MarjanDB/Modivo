@@ -1,9 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: So compiler can correctly infer the type of the arguments */
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
+
 import {
 	createProviderIdentifier,
 	type ProviderIdentifier,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 import type { ClassType } from "@lib/utils/ClassType.js";
 
 // Helper type to create a tuple of dependency types that match factory parameters

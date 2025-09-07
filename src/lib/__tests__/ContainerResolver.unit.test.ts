@@ -1,13 +1,13 @@
 import { Container } from "@lib/lib/ContainerRepresentation/Container.js";
 import { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/ContainerRepresentation/ContainerResolver.js";
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import { ProviderConstructionMethodForValue } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
 import { ProviderDefinitionForValue } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import {
 	type DependencyTokenType,
 	ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 
 describe("ContainerResolver", () => {
 	it("should resolve a value dependency", () => {

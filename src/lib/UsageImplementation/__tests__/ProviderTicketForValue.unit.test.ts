@@ -1,5 +1,5 @@
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import { ProviderIdentifierAsString } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 import { ProviderTicketForValue, ProviderTicketMaster } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
 
 /**

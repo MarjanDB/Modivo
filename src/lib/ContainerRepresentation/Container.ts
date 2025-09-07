@@ -1,8 +1,8 @@
 import { ContainerHierarchyResolver } from "@lib/lib/ContainerRepresentation/ContainerHierarchyResolver.js";
 import type { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
 import { ContainerResolver } from "@lib/lib/ContainerRepresentation/ContainerResolver.js";
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 
 export class Container {
 	private readonly containerResolver: ContainerResolver;

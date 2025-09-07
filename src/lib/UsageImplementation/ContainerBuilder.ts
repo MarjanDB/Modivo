@@ -1,6 +1,5 @@
 import { Container } from "@lib/lib/ContainerRepresentation/Container.js";
 import { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
-import type { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import {
 	ProviderConstructionMethodForAsyncFactory,
 	ProviderConstructionMethodForClass,
@@ -15,6 +14,7 @@ import {
 } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import { ProviderDependencyForFunction } from "@lib/lib/ProviderRepresentation/ProviderDependency.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import type { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 import {
 	type ProviderTicket,
 	ProviderTicketForAsyncFunction,

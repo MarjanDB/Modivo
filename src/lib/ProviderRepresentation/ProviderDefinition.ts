@@ -1,4 +1,3 @@
-import type { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type {
 	ProviderConstructionMethodForAsyncFactory,
 	ProviderConstructionMethodForClass,
@@ -7,6 +6,7 @@ import type {
 } from "@lib/lib/ProviderRepresentation/ProviderConstructionMethod.js";
 import type { ProviderDependencyForFunction } from "@lib/lib/ProviderRepresentation/ProviderDependency.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import type { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 
 export class ProviderDefinitionForClass<ClassArguments extends unknown[] = unknown[]> {
 	public constructor(

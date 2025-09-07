@@ -2,8 +2,6 @@
 
 // Container class - for resolving dependencies
 export { Container } from "@lib/lib/ContainerRepresentation/Container.js";
-// Provider scope enum - for defining dependency scopes
-export { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 // Provider identifier utilities
 export {
 	createProviderIdentifier,
@@ -14,6 +12,8 @@ export {
 	type ProviderIdentifierAsString,
 	type ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+// Provider scope enum - for defining dependency scopes
+export { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 export { ContainerBuilder } from "@lib/lib/UsageImplementation/ContainerBuilder.js";
 // Provider ticket types - for advanced usage
 export type {

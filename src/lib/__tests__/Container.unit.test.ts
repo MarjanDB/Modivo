@@ -1,6 +1,5 @@
 import { Container } from "@lib/lib/ContainerRepresentation/Container.js";
 import { ContainerRepresentation } from "@lib/lib/ContainerRepresentation/ContainerRepresentation.js";
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import {
 	ProviderConstructionMethodForClass,
 	ProviderConstructionMethodForFactory,
@@ -16,6 +15,7 @@ import {
 	type DependencyTokenType,
 	ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 
 describe("Container", () => {
 	describe("localResolveDependency", () => {

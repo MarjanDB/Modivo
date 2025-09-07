@@ -1,7 +1,7 @@
 import { ContainerProviderLookup } from "@lib/lib/ContainerRepresentation/ContainerProviderLookup.js";
-import { ProviderScope } from "@lib/lib/enums/ProviderScope.js";
 import type { ProviderDefinition } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 
 export class ContainerRepresentation {
 	public constructor(
