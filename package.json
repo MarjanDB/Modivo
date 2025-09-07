@@ -27,7 +27,7 @@
 	"scripts": {
 		"test": "vitest",
 		"test:coverage": "vitest --coverage",
-		"test:ci": "vitest --coverage --exclude \"**/integration/**\"",
+		"test:ci": "vitest --coverage --exclude \"**.integration.test.ts\"",
 		"build": "vite build",
 		"format": "biome format --write",
 		"lint": "biome check"
