@@ -114,8 +114,8 @@ describe("Container", () => {
 				new ProviderConstructionMethodForClass(classType),
 				ProviderScope.SINGLETON,
 				[
-					new ProviderDependencyForFunction(0, dependencyToken1),
-					new ProviderDependencyForFunction(1, dependencyToken2),
+					new ProviderDependencyForFunction(dependencyToken1),
+					new ProviderDependencyForFunction(dependencyToken2),
 				],
 			);
 
@@ -158,8 +158,8 @@ describe("Container", () => {
 				}),
 				ProviderScope.SINGLETON,
 				[
-					new ProviderDependencyForFunction(0, dependencyToken1),
-					new ProviderDependencyForFunction(1, dependencyToken2),
+					new ProviderDependencyForFunction(dependencyToken1),
+					new ProviderDependencyForFunction(dependencyToken2),
 				],
 			);
 
@@ -237,7 +237,7 @@ describe("Container", () => {
 					return dependency1;
 				}),
 				ProviderScope.SINGLETON,
-				[new ProviderDependencyForFunction(0, parentDependencyToken)],
+				[new ProviderDependencyForFunction(parentDependencyToken)],
 			);
 			childRepresentation.registerProvider(childDependencyEntry);
 			const childContainer = new Container(childRepresentation, parentContainer);

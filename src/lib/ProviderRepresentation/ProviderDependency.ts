@@ -10,8 +10,5 @@ export class ProviderDependencyForClass {
 	) {}
 }
 export class ProviderDependencyForFunction {
-	public constructor(
-		public readonly parameterIndex: number,
-		public readonly dependencyToken: ProviderIdentifier,
-	) {}
+	public constructor(public readonly dependencyToken: ProviderIdentifier) {}
 }

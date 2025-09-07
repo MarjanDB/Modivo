@@ -38,9 +38,7 @@ export class ContainerBuilder {
 				ticket.token,
 				new ProviderConstructionMethodForFactory(ticket.factory),
 				ticket.scope,
-				ticket.dependencies.map(
-					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
-				),
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
 			);
 			this.containerRepresentation.registerProvider(definition);
 			return this;
@@ -51,9 +49,7 @@ export class ContainerBuilder {
 				ticket.token,
 				new ProviderConstructionMethodForAsyncFactory(ticket.factory),
 				ticket.scope,
-				ticket.dependencies.map(
-					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
-				),
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
 			);
 			this.containerRepresentation.registerProvider(definition);
 			return this;
@@ -64,9 +60,7 @@ export class ContainerBuilder {
 				ticket.token,
 				new ProviderConstructionMethodForClass(ticket.classConstructor),
 				ticket.scope,
-				ticket.dependencies.map(
-					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
-				),
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
 			);
 			this.containerRepresentation.registerProvider(definition);
 			return this;

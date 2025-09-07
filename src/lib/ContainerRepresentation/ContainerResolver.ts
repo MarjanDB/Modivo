@@ -16,11 +16,7 @@ export class ContainerResolver {
 	}
 
 	private resolveFactoryProvider(providerDefinition: ProviderDefinitionForFunction): unknown {
-		const sortedDependencies = [...providerDefinition.dependencies].sort(
-			(a, b) => a.parameterIndex - b.parameterIndex,
-		);
-
-		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
+		const resolvedDependencies = providerDefinition.dependencies.map((dependencyToken) => {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
@@ -28,11 +24,7 @@ export class ContainerResolver {
 	}
 
 	private resolveClassProvider(providerDefinition: ProviderDefinitionForClass): unknown {
-		const sortedDependencies = [...providerDefinition.dependencies].sort(
-			(a, b) => a.parameterIndex - b.parameterIndex,
-		);
-
-		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
+		const resolvedDependencies = providerDefinition.dependencies.map((dependencyToken) => {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
@@ -40,11 +32,7 @@ export class ContainerResolver {
 	}
 
 	private resolveAsyncFactoryProvider(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {
-		const sortedDependencies = [...providerDefinition.dependencies].sort(
-			(a, b) => a.parameterIndex - b.parameterIndex,
-		);
-
-		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
+		const resolvedDependencies = providerDefinition.dependencies.map((dependencyToken) => {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
