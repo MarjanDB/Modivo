@@ -18,7 +18,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4(@types/node@24.3.1))
       modivo:
-        specifier: 'link:'
+        specifier: link:.
         version: 'link:'
       typescript:
         specifier: ^5.9.2
