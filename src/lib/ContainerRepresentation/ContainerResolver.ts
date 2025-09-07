@@ -11,63 +11,63 @@ import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/Provide
 export class ContainerResolver {
 	public constructor(public readonly container: Container) {}
 
-	private resolveValueDependency(providerDefinition: ProviderDefinitionForValue): unknown {
+	private resolveValueProvider(providerDefinition: ProviderDefinitionForValue): unknown {
 		return providerDefinition.constructionMethod.value;
 	}
 
-	private resolveFactoryDependency(providerDefinition: ProviderDefinitionForFunction): unknown {
+	private resolveFactoryProvider(providerDefinition: ProviderDefinitionForFunction): unknown {
 		const sortedDependencies = [...providerDefinition.dependencies].sort(
 			(a, b) => a.parameterIndex - b.parameterIndex,
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.container.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
 		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
 	}
 
-	private resolveClassDependency(providerDefinition: ProviderDefinitionForClass): unknown {
+	private resolveClassProvider(providerDefinition: ProviderDefinitionForClass): unknown {
 		const sortedDependencies = [...providerDefinition.dependencies].sort(
 			(a, b) => a.parameterIndex - b.parameterIndex,
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.container.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
 		return new providerDefinition.constructionMethod.classType(...resolvedDependencies);
 	}
 
-	private resolveAsyncFactoryDependency(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {
+	private resolveAsyncFactoryProvider(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {
 		const sortedDependencies = [...providerDefinition.dependencies].sort(
 			(a, b) => a.parameterIndex - b.parameterIndex,
 		);
 
 		const resolvedDependencies = sortedDependencies.map((dependencyToken) => {
-			return this.container.resolveDependency(dependencyToken.dependencyToken);
+			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
 		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
 	}
 
-	public resolveDependency(dependencyToken: ProviderIdentifier): unknown {
-		const dependencyEntry = this.container.containerRepresentation.lookupDependencyEntry(dependencyToken);
+	public resolveProvider(dependencyToken: ProviderIdentifier): unknown {
+		const dependencyEntry = this.container.containerRepresentation.lookupProviderEntry(dependencyToken);
 
 		if (!dependencyEntry) {
 			throw new Error(`Dependency ${dependencyToken} not found`);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForClass) {
-			return this.resolveClassDependency(dependencyEntry);
+			return this.resolveClassProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForFunction) {
-			return this.resolveFactoryDependency(dependencyEntry);
+			return this.resolveFactoryProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForValue) {
-			return this.resolveValueDependency(dependencyEntry);
+			return this.resolveValueProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderConstructionMethodForAsyncFactory) {
@@ -77,27 +77,27 @@ export class ContainerResolver {
 		return dependencyEntry;
 	}
 
-	public async resolveDependencyAsync(dependencyToken: ProviderIdentifier): Promise<unknown> {
-		const dependencyEntry = this.container.containerRepresentation.lookupDependencyEntry(dependencyToken);
+	public async resolveProviderAsync(dependencyToken: ProviderIdentifier): Promise<unknown> {
+		const dependencyEntry = this.container.containerRepresentation.lookupProviderEntry(dependencyToken);
 
 		if (!dependencyEntry) {
 			throw new Error(`Dependency ${dependencyToken} not found`);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForAsyncFunction) {
-			return await this.resolveAsyncFactoryDependency(dependencyEntry);
+			return await this.resolveAsyncFactoryProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForFunction) {
-			return this.resolveFactoryDependency(dependencyEntry);
+			return this.resolveFactoryProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForClass) {
-			return this.resolveClassDependency(dependencyEntry);
+			return this.resolveClassProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForValue) {
-			return this.resolveValueDependency(dependencyEntry);
+			return this.resolveValueProvider(dependencyEntry);
 		}
 
 		return dependencyEntry;

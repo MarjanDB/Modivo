@@ -10,49 +10,49 @@ export class ContainerRepresentation {
 		private readonly providerLookupForTransientDependencies = new ContainerProviderLookup(),
 	) {}
 
-	public registerDependency<FactoryArguments extends unknown[] = unknown[]>(
+	public registerProvider<FactoryArguments extends unknown[] = unknown[]>(
 		dependencyEntry: ProviderDefinition<FactoryArguments>,
 	): void {
 		const generalCastOfDependencyEntry = dependencyEntry as ProviderDefinition<unknown[]>;
 
 		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
-			this.providerLookupForSingletonDependencies.registerDependency(generalCastOfDependencyEntry);
+			this.providerLookupForSingletonDependencies.registerProvider(generalCastOfDependencyEntry);
 			this.providerScopeLookup.set(dependencyEntry.token, ProviderScope.SINGLETON);
 			return;
 		}
 
 		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
-			this.providerLookupForTransientDependencies.registerDependency(generalCastOfDependencyEntry);
+			this.providerLookupForTransientDependencies.registerProvider(generalCastOfDependencyEntry);
 			this.providerScopeLookup.set(dependencyEntry.token, ProviderScope.TRANSIENT);
 			return;
 		}
 	}
 
-	public overrideDependency<FactoryArguments extends unknown[] = unknown[]>(
+	public overrideProvider<FactoryArguments extends unknown[] = unknown[]>(
 		dependencyEntry: ProviderDefinition<FactoryArguments>,
 	): void {
 		const generalCastOfDependencyEntry = dependencyEntry as ProviderDefinition<unknown[]>;
 
 		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
-			this.providerLookupForSingletonDependencies.overrideDependency(generalCastOfDependencyEntry);
+			this.providerLookupForSingletonDependencies.overrideProvider(generalCastOfDependencyEntry);
 			return;
 		}
 
 		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
-			this.providerLookupForTransientDependencies.overrideDependency(generalCastOfDependencyEntry);
+			this.providerLookupForTransientDependencies.overrideProvider(generalCastOfDependencyEntry);
 			return;
 		}
 	}
 
-	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
+	public lookupProviderEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
 		const scope = this.providerScopeLookup.get(dependencyToken);
 
 		if (scope === ProviderScope.SINGLETON) {
-			return this.providerLookupForSingletonDependencies.lookupDependencyEntry(dependencyToken);
+			return this.providerLookupForSingletonDependencies.lookupProviderEntry(dependencyToken);
 		}
 
 		if (scope === ProviderScope.TRANSIENT) {
-			return this.providerLookupForTransientDependencies.lookupDependencyEntry(dependencyToken);
+			return this.providerLookupForTransientDependencies.lookupProviderEntry(dependencyToken);
 		}
 
 		return null;

@@ -25,7 +25,7 @@ export class ContainerProviderLookup {
 		ProviderDefinitionForClass
 	> = new Map();
 
-	public registerDependency(dependencyEntry: ProviderDefinition<unknown[]>): void {
+	public registerProvider(dependencyEntry: ProviderDefinition<unknown[]>): void {
 		// check if it's already registered
 		if (this.mapOfDependencyTokenToDependencyEntry.has(dependencyEntry.token)) {
 			throw new Error(`Dependency ${dependencyEntry.token} already registered`);
@@ -46,7 +46,7 @@ export class ContainerProviderLookup {
 		}
 	}
 
-	public overrideDependency(dependencyEntry: ProviderDefinition<unknown[]>): void {
+	public overrideProvider(dependencyEntry: ProviderDefinition<unknown[]>): void {
 		if (!this.mapOfDependencyTokenToDependencyEntry.has(dependencyEntry.token)) {
 			throw new Error(`Dependency ${dependencyEntry.token} not yet registered. Use registerDependency instead.`);
 		}
@@ -66,19 +66,19 @@ export class ContainerProviderLookup {
 		}
 	}
 
-	public lookupDependencyEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
+	public lookupProviderEntry(dependencyToken: ProviderIdentifier): ProviderDefinition<unknown[]> | null {
 		return this.mapOfDependencyTokenToDependencyEntry.get(dependencyToken) ?? null;
 	}
 
-	public lookupDependencyEntryForFactory(dependencyToken: ProviderIdentifier): ProviderDefinitionForFunction | null {
+	public lookupProviderEntryForFactory(dependencyToken: ProviderIdentifier): ProviderDefinitionForFunction | null {
 		return this.mapOfDependencyTokenToDependencyEntryForFactory.get(dependencyToken) ?? null;
 	}
 
-	public lookupDependencyEntryForValue(dependencyToken: ProviderIdentifier): ProviderDefinitionForValue | null {
+	public lookupProviderEntryForValue(dependencyToken: ProviderIdentifier): ProviderDefinitionForValue | null {
 		return this.mapOfDependencyTokenToDependencyEntryForValue.get(dependencyToken) ?? null;
 	}
 
-	public lookupDependencyEntryForClass(dependencyToken: ProviderIdentifier): ProviderDefinitionForClass | null {
+	public lookupProviderEntryForClass(dependencyToken: ProviderIdentifier): ProviderDefinitionForClass | null {
 		return this.mapOfDependencyTokenToDependencyEntryForClass.get(dependencyToken) ?? null;
 	}
 }

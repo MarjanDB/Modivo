@@ -18,9 +18,9 @@ describe("ContainerRepresentation", () => {
 			new ProviderConstructionMethodForValue(1),
 			ProviderScope.SINGLETON,
 		);
-		containerEntry.registerDependency(dependencyEntry);
+		containerEntry.registerProvider(dependencyEntry);
 
-		const resolvedDependency = containerEntry.lookupDependencyEntry(dependencyToken);
+		const resolvedDependency = containerEntry.lookupProviderEntry(dependencyToken);
 		expect(resolvedDependency?.constructionMethod).toBeInstanceOf(ProviderConstructionMethodForValue);
 	});
 });

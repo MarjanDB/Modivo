@@ -22,9 +22,9 @@ describe("ContainerResolver", () => {
 			new ProviderConstructionMethodForValue(1),
 			ProviderScope.SINGLETON,
 		);
-		containerRepresentation.registerDependency(dependencyEntry);
+		containerRepresentation.registerProvider(dependencyEntry);
 
-		const resolvedDependency = containerResolver.resolveDependency(dependencyToken);
+		const resolvedDependency = containerResolver.resolveProvider(dependencyToken);
 		expect(resolvedDependency).toBe(1);
 	});
 });

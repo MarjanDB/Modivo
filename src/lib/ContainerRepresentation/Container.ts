@@ -17,12 +17,12 @@ export class Container {
 		this.containerHierarchyResolver = new ContainerHierarchyResolver(this);
 	}
 
-	public resolveDependency(dependencyToken: ProviderIdentifier): unknown {
-		return this.containerHierarchyResolver.resolveDependency(dependencyToken);
+	public resolveProvider(dependencyToken: ProviderIdentifier): unknown {
+		return this.containerHierarchyResolver.resolveProvider(dependencyToken);
 	}
 
-	public resolveLocalDependency(dependencyToken: ProviderIdentifier): unknown {
-		const dependencyEntry = this.containerRepresentation.lookupDependencyEntry(dependencyToken);
+	public resolveLocalProvider(dependencyToken: ProviderIdentifier): unknown {
+		const dependencyEntry = this.containerRepresentation.lookupProviderEntry(dependencyToken);
 
 		if (!dependencyEntry) {
 			throw new Error(`Dependency ${dependencyToken} not found`);
@@ -33,13 +33,13 @@ export class Container {
 				return this.resolvedSingletoneDependencies.get(dependencyToken);
 			}
 
-			const resolvedDependency = this.containerResolver.resolveDependency(dependencyToken);
+			const resolvedDependency = this.containerResolver.resolveProvider(dependencyToken);
 			this.resolvedSingletoneDependencies.set(dependencyToken, resolvedDependency);
 			return resolvedDependency;
 		}
 
 		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
-			return this.containerResolver.resolveDependency(dependencyToken);
+			return this.containerResolver.resolveProvider(dependencyToken);
 		}
 
 		throw new Error(`Dependency ${dependencyToken} has an invalid scope`);

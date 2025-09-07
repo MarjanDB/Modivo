@@ -12,7 +12,7 @@ describe("SingleGlobalContainer", () => {
 		containerBuilder.register(provider);
 		const container = containerBuilder.build();
 
-		expect(container.resolveDependency(provider.token)).toBe(1);
+		expect(container.resolveProvider(provider.token)).toBe(1);
 	});
 
 	it("can be used to resolve different types of providers", () => {
@@ -46,9 +46,9 @@ describe("SingleGlobalContainer", () => {
 		containerBuilder.register(providerClass);
 		const container = containerBuilder.build();
 
-		expect(container.resolveDependency(providerValue.token)).toBe("value");
-		expect(container.resolveDependency(providerFunction.token)).toBe("function");
-		expect(container.resolveDependency(providerClass.token)).toBeInstanceOf(TestClass);
+		expect(container.resolveProvider(providerValue.token)).toBe("value");
+		expect(container.resolveProvider(providerFunction.token)).toBe("function");
+		expect(container.resolveProvider(providerClass.token)).toBeInstanceOf(TestClass);
 
 		// TODO: Add support for async functions
 		// expect(container.resolveDependency(providerAsyncFunction.token)).toBe("async function");
@@ -72,7 +72,7 @@ describe("SingleGlobalContainer", () => {
 		containerBuilder.register(providerFunction);
 		const container = containerBuilder.build();
 
-		expect(container.resolveDependency(providerValue.token)).toBe("value");
-		expect(container.resolveDependency(providerFunction.token)).toBe("value function");
+		expect(container.resolveProvider(providerValue.token)).toBe("value");
+		expect(container.resolveProvider(providerFunction.token)).toBe("value function");
 	});
 });

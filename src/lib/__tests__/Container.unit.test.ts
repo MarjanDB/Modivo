@@ -28,11 +28,11 @@ describe("Container", () => {
 				new ProviderConstructionMethodForValue(1),
 				ProviderScope.SINGLETON,
 			);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency = container.resolveLocalDependency(dependencyToken);
+			const resolvedDependency = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency).toBe(1);
 		});
 
@@ -45,18 +45,18 @@ describe("Container", () => {
 				new ProviderConstructionMethodForValue(1),
 				ProviderScope.SINGLETON,
 			);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const dependencyEntry2 = new ProviderDefinitionForValue(
 				dependencyToken,
 				new ProviderConstructionMethodForValue(2),
 				ProviderScope.SINGLETON,
 			);
-			containerRepresentation.overrideDependency(dependencyEntry2);
+			containerRepresentation.overrideProvider(dependencyEntry2);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency = container.resolveLocalDependency(dependencyToken);
+			const resolvedDependency = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency).toBe(2);
 		});
 
@@ -72,14 +72,14 @@ describe("Container", () => {
 				ProviderScope.SINGLETON,
 				[],
 			);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency1 = container.resolveLocalDependency(dependencyToken);
+			const resolvedDependency1 = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency1).toBeInstanceOf(classType);
 
-			const resolvedDependency2 = container.resolveLocalDependency(dependencyToken);
+			const resolvedDependency2 = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency2).toBe(resolvedDependency1);
 		});
 
@@ -119,13 +119,13 @@ describe("Container", () => {
 				],
 			);
 
-			containerRepresentation.registerDependency(dependencyEntry1);
-			containerRepresentation.registerDependency(dependencyEntry2);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry1);
+			containerRepresentation.registerProvider(dependencyEntry2);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency1 = container.resolveLocalDependency(providerToken);
+			const resolvedDependency1 = container.resolveLocalProvider(providerToken);
 			expect(resolvedDependency1).toBeInstanceOf(classType);
 
 			expect((resolvedDependency1 as InstanceType<typeof classType>).dependency1).toBe(1);
@@ -163,13 +163,13 @@ describe("Container", () => {
 				],
 			);
 
-			containerRepresentation.registerDependency(dependencyEntry1);
-			containerRepresentation.registerDependency(dependencyEntry2);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry1);
+			containerRepresentation.registerProvider(dependencyEntry2);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency = container.resolveLocalDependency(dependencyToken);
+			const resolvedDependency = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency).toBe(0.5);
 		});
 	});
@@ -184,11 +184,11 @@ describe("Container", () => {
 				new ProviderConstructionMethodForValue(1),
 				ProviderScope.SINGLETON,
 			);
-			containerRepresentation.registerDependency(dependencyEntry);
+			containerRepresentation.registerProvider(dependencyEntry);
 
 			const container = new Container(containerRepresentation);
 
-			const resolvedDependency = container.resolveDependency(dependencyToken);
+			const resolvedDependency = container.resolveProvider(dependencyToken);
 			expect(resolvedDependency).toBe(1);
 		});
 
@@ -203,13 +203,13 @@ describe("Container", () => {
 				new ProviderConstructionMethodForValue(1),
 				ProviderScope.SINGLETON,
 			);
-			parentRepresentation.registerDependency(parentDependencyEntry);
+			parentRepresentation.registerProvider(parentDependencyEntry);
 			const parentContainer = new Container(parentRepresentation);
 
 			const childRepresentation = new ContainerRepresentation();
 			const childContainer = new Container(childRepresentation, parentContainer);
 
-			const resolvedDependency = childContainer.resolveDependency(parentDependencyToken);
+			const resolvedDependency = childContainer.resolveProvider(parentDependencyToken);
 			expect(resolvedDependency).toBe(1);
 		});
 
@@ -224,7 +224,7 @@ describe("Container", () => {
 				new ProviderConstructionMethodForValue(1),
 				ProviderScope.SINGLETON,
 			);
-			parentRepresentation.registerDependency(parentDependencyEntry);
+			parentRepresentation.registerProvider(parentDependencyEntry);
 			const parentContainer = new Container(parentRepresentation);
 
 			const childRepresentation = new ContainerRepresentation();
@@ -239,10 +239,10 @@ describe("Container", () => {
 				ProviderScope.SINGLETON,
 				[new ProviderDependencyForFunction(0, parentDependencyToken)],
 			);
-			childRepresentation.registerDependency(childDependencyEntry);
+			childRepresentation.registerProvider(childDependencyEntry);
 			const childContainer = new Container(childRepresentation, parentContainer);
 
-			const resolvedDependency = childContainer.resolveDependency(childDependencyToken);
+			const resolvedDependency = childContainer.resolveProvider(childDependencyToken);
 			expect(resolvedDependency).toBe(1);
 		});
 	});

@@ -4,7 +4,7 @@ import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/Provide
 export class ContainerHierarchyResolver {
 	public constructor(private readonly container: Container) {}
 
-	public resolveDependency(dependencyToken: ProviderIdentifier): unknown {
+	public resolveProvider(dependencyToken: ProviderIdentifier): unknown {
 		// First attempt to resolve on the current container
 		const currentContainerResolvedProvider = this.resolveForContainer(this.container, dependencyToken);
 
@@ -32,13 +32,13 @@ export class ContainerHierarchyResolver {
 	}
 
 	private resolveForContainer(container: Container, dependencyToken: ProviderIdentifier): unknown | null {
-		const dependencyEntry = container.containerRepresentation.lookupDependencyEntry(dependencyToken);
+		const dependencyEntry = container.containerRepresentation.lookupProviderEntry(dependencyToken);
 
 		if (!dependencyEntry) {
 			return null;
 		}
 
-		return container.resolveLocalDependency(dependencyToken);
+		return container.resolveLocalProvider(dependencyToken);
 	}
 
 	private recursiveContainerTraversal(container: Container, dependencyToken: ProviderIdentifier): unknown | null {

@@ -18,6 +18,7 @@ yarn add modivo
 |---------|--------|-------------|
 | **Common Types of Providers** | ✅ Supported | Value, Factory, and Class providers |
 | **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
+| **Provider Override** | 🚧 In Development | Be able to override providers (for tests) |
 | **Type-Safe Dependencies** | ✅ Supported | Compile-time dependency checking and validation |
 | **Singleton/Transient Scopes** | ✅ Supported | Singleton and Transient lifecycle management |
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
@@ -139,20 +140,14 @@ const emailProvider = ProviderTicketMaster.createTicket({
 
 ## API Reference
 
-> 🔧 **Complete API Documentation**: See [`src/lib/UsageImplementation/`](src/lib/UsageImplementation/) for detailed method signatures and advanced usage.
-
 ### ContainerBuilder
 - `ContainerBuilder.create()` - Create a new container builder
-- `register(provider)` - Register a provider ticket to the container
+- `register(ticket)` - Register a provider to the container using a provider ticket
 - `build()` - Build the final container for dependency resolution
 
 ### Container
-- `resolveDependency(token)` - Resolve a dependency by its token
-- `has(token)` - Check if a dependency is registered
+- `resolveProvider(token)` - Resolve a provider by its token
 
 ### ProviderTicketMaster
 - `createTicket(options)` - Create a provider ticket (does not register to container)
-- `createTicketForValue(token, value)` - Create a value provider ticket
-- `createTicketForFunction(token, factory, dependencies)` - Create a function provider ticket
-- `createTicketForClass(token, classConstructor, dependencies)` - Create a class provider ticket
 

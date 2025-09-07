@@ -42,7 +42,7 @@ export class ContainerBuilder {
 					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
 				),
 			);
-			this.containerRepresentation.registerDependency(definition);
+			this.containerRepresentation.registerProvider(definition);
 			return this;
 		}
 
@@ -55,7 +55,7 @@ export class ContainerBuilder {
 					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
 				),
 			);
-			this.containerRepresentation.registerDependency(definition);
+			this.containerRepresentation.registerProvider(definition);
 			return this;
 		}
 
@@ -68,7 +68,7 @@ export class ContainerBuilder {
 					(dependency, index) => new ProviderDependencyForFunction(index, dependency.token),
 				),
 			);
-			this.containerRepresentation.registerDependency(definition);
+			this.containerRepresentation.registerProvider(definition);
 			return this;
 		}
 
@@ -78,7 +78,7 @@ export class ContainerBuilder {
 				new ProviderConstructionMethodForValue(ticket.value),
 				ticket.scope,
 			);
-			this.containerRepresentation.registerDependency(definition);
+			this.containerRepresentation.registerProvider(definition);
 			return this;
 		}
 
