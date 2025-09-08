@@ -75,4 +75,36 @@ describe("SingleGlobalContainer", () => {
 		expect(container.resolveProvider(providerValue.token)).toBe("value");
 		expect(container.resolveProvider(providerFunction.token)).toBe("value function");
 	});
+
+	it("ticket can be used to resolve providers and utilize typescript for type inference", () => {
+		const containerBuilder = ContainerBuilder.create();
+
+		const providerFunctionTicket = ProviderTicketMaster.createTicket({
+			identifier: "providerFunction",
+			factory: () => ({ example: "value" }),
+		});
+
+		containerBuilder.register(providerFunctionTicket);
+		const container = containerBuilder.build();
+
+		const resolvedFunctionValue: { example: string } = container.resolveProvider(providerFunctionTicket);
+
+		expect(resolvedFunctionValue.example).toBe("value");
+	});
+
+	it("ticket can also be used to resolve local providers and utilize typescript for type inference", () => {
+		const containerBuilder = ContainerBuilder.create();
+
+		const providerFunctionTicket = ProviderTicketMaster.createTicket({
+			identifier: "providerFunction",
+			factory: () => ({ example: "value" }),
+		});
+
+		containerBuilder.register(providerFunctionTicket);
+		const container = containerBuilder.build();
+
+		const resolvedFunctionValue: { example: string } = container.resolveLocalProvider(providerFunctionTicket);
+
+		expect(resolvedFunctionValue.example).toBe("value");
+	});
 });

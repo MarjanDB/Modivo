@@ -16,6 +16,7 @@ import {
 	ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
 import { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
+import { ProviderTicketMaster } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
 
 describe("Container", () => {
 	describe("localResolveDependency", () => {
@@ -34,6 +35,29 @@ describe("Container", () => {
 
 			const resolvedDependency = container.resolveLocalProvider(dependencyToken);
 			expect(resolvedDependency).toBe(1);
+		});
+
+		it("should resolve a value dependency using a ticket and utilize typescript for type inference", () => {
+			const containerRepresentation = new ContainerRepresentation();
+
+			const dependencyIdentifier = Symbol.for("dependency") as DependencyTokenType;
+			const value = { example: "value" };
+
+			const dependencyTicket = ProviderTicketMaster.createTicket({
+				identifier: dependencyIdentifier,
+				value: value,
+			});
+			const dependencyEntry = new ProviderDefinitionForValue(
+				dependencyTicket.token,
+				new ProviderConstructionMethodForValue(value),
+				ProviderScope.SINGLETON,
+			);
+			containerRepresentation.registerProvider(dependencyEntry);
+
+			const container = new Container(containerRepresentation);
+
+			const resolvedDependency: { example: string } = container.resolveLocalProvider(dependencyTicket);
+			expect(resolvedDependency).toBe(value);
 		});
 
 		it("should be possible to override a value dependency", () => {

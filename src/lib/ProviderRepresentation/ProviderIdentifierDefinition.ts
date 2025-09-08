@@ -4,15 +4,15 @@ import type { Nominal } from "@lib/utils/Nominal.js";
 export type DependencyTokenType = Nominal<symbol, "DependencyToken">;
 
 export class ProviderIdentifierAsSymbol {
-	public constructor(public readonly token: DependencyTokenType) {}
+	public constructor(public readonly identifier: DependencyTokenType) {}
 }
 
 export class ProviderIdentifierAsString {
-	public constructor(public readonly token: string) {}
+	public constructor(public readonly identifier: string) {}
 }
 
 export class ProviderIdentifierAsClass {
-	public constructor(public readonly classType: ClassType<unknown>) {}
+	public constructor(public readonly identifier: ClassType<unknown>) {}
 }
 
 export type ProviderIdentifier = ProviderIdentifierAsSymbol | ProviderIdentifierAsString | ProviderIdentifierAsClass;
