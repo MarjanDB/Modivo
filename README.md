@@ -21,6 +21,7 @@ yarn add modivo
 |---------|--------|-------------|
 | **Common Types of Providers** | ✅ Supported | Value, Factory, and Class providers |
 | **Type-Safe Dependencies** | ✅ Supported | Compile-time dependency checking and validation |
+| **Inferred Provider Type** | ✅ Supported | Infer provider return type when using tickets |
 | **Singleton/Transient Scopes** | ✅ Supported | Singleton and Transient lifecycle management |
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
 | **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
@@ -67,7 +68,11 @@ containerBuilder.register(dbProvider);
 const container = containerBuilder.build();
 
 // Resolve dependencies using the provider's token
-const db = container.resolveDependency(dbProvider.token);
+const db: unknown = container.resolveDependency(dbProvider.token);
+
+// Alternatively, use the created ticket for type safety
+const db: DatabaseService = container.resolveDependency(dbProvider);
+
 db.connect(); // "Connecting to https://api.example.com"
 ```
 
