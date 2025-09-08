@@ -20,13 +20,16 @@ yarn add modivo
 | Feature | Status | Description |
 |---------|--------|-------------|
 | **Common Types of Providers** | ✅ Supported | Value, Factory, and Class providers |
-| **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
-| **Provider Override** | 🚧 In Development | Be able to override providers (for tests) |
 | **Type-Safe Dependencies** | ✅ Supported | Compile-time dependency checking and validation |
 | **Singleton/Transient Scopes** | ✅ Supported | Singleton and Transient lifecycle management |
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
-| **Circular Dependencies** | 🚧 Planned | Support for circular dependencies |
-| **Module-like Container Hierarchy** | 🚧 Planned | Modular container organization and management (think nestjs) |
+| **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
+| **Provider Override** | 🚧 In Development | Be able to override providers (for tests) |
+| **Dependencies via Interfaces** | 📋 Planned | Usage of interface return types |
+| **Lifecycle Methods** | 📋 Planned | Call and hook into lifecycle events of providers (after resolve / before destroy / etc.) |
+| **Circular Dependencies** | 📋 Planned | Support for circular dependencies |
+| **Module-like Container Hierarchy** | 📋 Planned | Modular container organization and management (think nestjs) |
+| **Exposed Dependency Resolution Tree** | 📋 Planned | See how providers and dependencies were resolved |
 
 ## Quick Start
 
@@ -68,7 +71,7 @@ const db = container.resolveDependency(dbProvider.token);
 db.connect(); // "Connecting to https://api.example.com"
 ```
 
-> 📚 **More Examples**: See [`src/Examples/`](src/Examples/) for comprehensive usage examples.
+> 📚 **Common usage examples**: See [`src/Examples/`](src/Examples/)
 
 ## Supported Provider Types
 
@@ -86,7 +89,7 @@ db.connect(); // "Connecting to https://api.example.com"
 | **SINGLETON** | Same instance returned every time (default) | `{ scope: ProviderScope.SINGLETON }` |
 | **TRANSIENT** | New instance created every time | `{ scope: ProviderScope.TRANSIENT }` |
 
-
+> **_Note:_** The provider controls the scope of itself, so if you have a singleton provider that takes in transient dependencies, the transient dependencies become singleton for that specific provider. On the other hand, having a transient provider that takes in singleton dependencies will respect the singleton nature of the dependencies. In other words, **Singleton scope trumps the Transient scope.**
 
 ---
 ---
