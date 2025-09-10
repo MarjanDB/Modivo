@@ -24,12 +24,23 @@ import {
 } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
 
 export class ContainerBuilder {
-	private readonly containerRepresentation: ContainerRepresentation = new ContainerRepresentation();
-
-	private constructor() {}
+	private constructor(
+		private readonly containerRepresentation: ContainerRepresentation = new ContainerRepresentation(),
+		private parent: Container | null = null,
+	) {}
 
 	public static create(): ContainerBuilder {
 		return new ContainerBuilder();
+	}
+
+	public static createFromExisting(container: Container): ContainerBuilder {
+		const builder = new ContainerBuilder(container.containerRepresentation, container.parentContainer);
+		return builder;
+	}
+
+	public withParentContainer(parentContainer: Container): ContainerBuilder {
+		this.parent = parentContainer;
+		return this;
 	}
 
 	public register(ticket: ProviderTicket<ProviderIdentifier, ProviderScope, unknown>): ContainerBuilder {
@@ -79,7 +90,54 @@ export class ContainerBuilder {
 		throw new Error("Invalid ticket type");
 	}
 
+	public override(ticket: ProviderTicket<ProviderIdentifier, ProviderScope, unknown>): ContainerBuilder {
+		if (ticket instanceof ProviderTicketForFunction) {
+			const definition = new ProviderDefinitionForFunction(
+				ticket.token,
+				new ProviderConstructionMethodForFactory(ticket.factory),
+				ticket.scope,
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
+			);
+			this.containerRepresentation.overrideProvider(definition);
+			return this;
+		}
+
+		if (ticket instanceof ProviderTicketForAsyncFunction) {
+			const definition = new ProviderDefinitionForAsyncFunction(
+				ticket.token,
+				new ProviderConstructionMethodForAsyncFactory(ticket.factory),
+				ticket.scope,
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
+			);
+			this.containerRepresentation.overrideProvider(definition);
+			return this;
+		}
+
+		if (ticket instanceof ProviderTicketForClass) {
+			const definition = new ProviderDefinitionForClass(
+				ticket.token,
+				new ProviderConstructionMethodForClass(ticket.classConstructor),
+				ticket.scope,
+				ticket.dependencies.map((dependency) => new ProviderDependencyForFunction(dependency.token)),
+			);
+			this.containerRepresentation.overrideProvider(definition);
+			return this;
+		}
+
+		if (ticket instanceof ProviderTicketForValue) {
+			const definition = new ProviderDefinitionForValue(
+				ticket.token,
+				new ProviderConstructionMethodForValue(ticket.value),
+				ticket.scope,
+			);
+			this.containerRepresentation.overrideProvider(definition);
+			return this;
+		}
+
+		throw new Error("Invalid ticket type");
+	}
+
 	public build(): Container {
-		return new Container(this.containerRepresentation);
+		return new Container(this.containerRepresentation, this.parent);
 	}
 }
