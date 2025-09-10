@@ -4,6 +4,9 @@ A lightweight, type-safe dependency injection library for TypeScript (JavaScript
 
 [![npm version](https://img.shields.io/npm/v/modivo.svg)](https://www.npmjs.com/package/modivo)
 
+Note that until all features are implemented, the library's API will keep chaning.
+I recommend pinning (~) to a specific version until a full release is made, at which point the API will follow semver releases.
+
 
 ## Installation
 
@@ -24,8 +27,8 @@ yarn add modivo
 | **Inferred Provider Type** | ✅ Supported | Infer provider return type when using tickets |
 | **Singleton/Transient Scopes** | ✅ Supported | Singleton and Transient lifecycle management |
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
+| **Provider Override** | ✅ Supported | Be able to override providers (for tests) |
 | **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
-| **Provider Override** | 🚧 In Development | Be able to override providers (for tests) |
 | **Dependencies via Interfaces** | 📋 Planned | Usage of interface return types |
 | **Lifecycle Methods** | 📋 Planned | Call and hook into lifecycle events of providers (after resolve / before destroy / etc.) |
 | **Circular Dependencies** | 📋 Planned | Support for circular dependencies |
