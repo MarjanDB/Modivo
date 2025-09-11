@@ -72,4 +72,59 @@ export class Container {
 
 		throw new Error(`Dependency ${identifier} has an invalid scope`);
 	}
+
+	public resolveAsyncProvider<
+		Ticket extends ProviderTicket<ProviderIdentifier, ProviderScope, unknown>,
+		TicketReturnType = Ticket extends ProviderTicket<ProviderIdentifier, ProviderScope, infer R> ? R : never,
+	>(providerToken: Ticket): TicketReturnType;
+	public resolveAsyncProvider(providerToken: ProviderIdentifier): Promise<unknown>;
+	public resolveAsyncProvider(
+		providerToken: ProviderIdentifier | ProviderTicket<ProviderIdentifier, ProviderScope, unknown>,
+	): Promise<unknown> {
+		if ("token" in providerToken) {
+			const identifier = providerToken.token;
+			return this.containerHierarchyResolver.resolveProviderAsync(identifier);
+		}
+
+		return this.containerHierarchyResolver.resolveProviderAsync(providerToken);
+	}
+
+	public resolveAsyncLocalProvider<
+		Ticket extends ProviderTicket<ProviderIdentifier, ProviderScope, unknown>,
+		TicketReturnType = Ticket extends ProviderTicket<ProviderIdentifier, ProviderScope, infer R> ? R : never,
+	>(providerToken: Ticket): TicketReturnType;
+	public resolveAsyncLocalProvider(providerToken: ProviderIdentifier): Promise<unknown>;
+	public async resolveAsyncLocalProvider(
+		providerToken: ProviderIdentifier | ProviderTicket<ProviderIdentifier, ProviderScope, unknown>,
+	): Promise<unknown> {
+		let identifier: ProviderIdentifier;
+
+		if ("token" in providerToken) {
+			identifier = providerToken.token;
+		} else {
+			identifier = providerToken;
+		}
+
+		const dependencyEntry = this.containerRepresentation.lookupProviderEntry(identifier);
+
+		if (!dependencyEntry) {
+			throw new Error(`Dependency ${providerToken} not found`);
+		}
+
+		if (dependencyEntry.scope === ProviderScope.SINGLETON) {
+			if (this.resolvedSingletoneDependencies.has(identifier)) {
+				return this.resolvedSingletoneDependencies.get(identifier);
+			}
+
+			const resolvedDependency = await this.containerResolver.resolveProviderAsync(identifier);
+			this.resolvedSingletoneDependencies.set(identifier, resolvedDependency);
+			return resolvedDependency;
+		}
+
+		if (dependencyEntry.scope === ProviderScope.TRANSIENT) {
+			return this.containerResolver.resolveProviderAsync(identifier);
+		}
+
+		throw new Error(`Dependency ${identifier} has an invalid scope`);
+	}
 }

@@ -270,4 +270,80 @@ describe("Container", () => {
 			expect(resolvedDependency).toBe(1);
 		});
 	});
+
+	describe("resolveAsyncDependency", () => {
+		it("should resolve a dependency from the current container", async () => {
+			const containerRepresentation = new ContainerRepresentation();
+
+			const dependencyToken = new ProviderIdentifierAsSymbol(Symbol.for("dependency") as DependencyTokenType);
+			const dependencyEntry = new ProviderDefinitionForValue(
+				dependencyToken,
+				new ProviderConstructionMethodForValue(1),
+				ProviderScope.SINGLETON,
+			);
+			containerRepresentation.registerProvider(dependencyEntry);
+
+			const container = new Container(containerRepresentation);
+
+			const resolvedDependency = container.resolveAsyncProvider(dependencyToken);
+			expect(resolvedDependency).toBeInstanceOf(Promise);
+			await expect(resolvedDependency).resolves.toBe(1);
+		});
+
+		it("should resolve a dependency from the parent container", async () => {
+			const parentRepresentation = new ContainerRepresentation();
+
+			const parentDependencyToken = new ProviderIdentifierAsSymbol(
+				Symbol.for("dependency") as DependencyTokenType,
+			);
+			const parentDependencyEntry = new ProviderDefinitionForValue(
+				parentDependencyToken,
+				new ProviderConstructionMethodForValue(1),
+				ProviderScope.SINGLETON,
+			);
+			parentRepresentation.registerProvider(parentDependencyEntry);
+			const parentContainer = new Container(parentRepresentation);
+
+			const childRepresentation = new ContainerRepresentation();
+			const childContainer = new Container(childRepresentation, parentContainer);
+
+			const resolvedDependency = childContainer.resolveAsyncProvider(parentDependencyToken);
+			expect(resolvedDependency).toBeInstanceOf(Promise);
+			await expect(resolvedDependency).resolves.toBe(1);
+		});
+
+		it("should resolve a dependency that is from a provider in the parent container", async () => {
+			const parentRepresentation = new ContainerRepresentation();
+
+			const parentDependencyToken = new ProviderIdentifierAsSymbol(
+				Symbol.for("dependency") as DependencyTokenType,
+			);
+			const parentDependencyEntry = new ProviderDefinitionForValue(
+				parentDependencyToken,
+				new ProviderConstructionMethodForValue(1),
+				ProviderScope.SINGLETON,
+			);
+			parentRepresentation.registerProvider(parentDependencyEntry);
+			const parentContainer = new Container(parentRepresentation);
+
+			const childRepresentation = new ContainerRepresentation();
+			const childDependencyToken = new ProviderIdentifierAsSymbol(
+				Symbol.for("dependency") as DependencyTokenType,
+			);
+			const childDependencyEntry = new ProviderDefinitionForFunction(
+				childDependencyToken,
+				new ProviderConstructionMethodForFactory((dependency1: number): number => {
+					return dependency1;
+				}),
+				ProviderScope.SINGLETON,
+				[new ProviderDependencyForFunction(parentDependencyToken)],
+			);
+			childRepresentation.registerProvider(childDependencyEntry);
+			const childContainer = new Container(childRepresentation, parentContainer);
+
+			const resolvedDependency = childContainer.resolveAsyncProvider(childDependencyToken);
+			expect(resolvedDependency).toBeInstanceOf(Promise);
+			await expect(resolvedDependency).resolves.toBe(1);
+		});
+	});
 });

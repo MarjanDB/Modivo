@@ -73,19 +73,19 @@ export class ContainerResolver {
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForAsyncFunction) {
-			return await this.resolveAsyncFactoryProvider(dependencyEntry);
+			return this.resolveAsyncFactoryProvider(dependencyEntry);
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForFunction) {
-			return this.resolveFactoryProvider(dependencyEntry);
+			return Promise.resolve(this.resolveFactoryProvider(dependencyEntry));
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForClass) {
-			return this.resolveClassProvider(dependencyEntry);
+			return Promise.resolve(this.resolveClassProvider(dependencyEntry));
 		}
 
 		if (dependencyEntry instanceof ProviderDefinitionForValue) {
-			return this.resolveValueProvider(dependencyEntry);
+			return Promise.resolve(this.resolveValueProvider(dependencyEntry));
 		}
 
 		return dependencyEntry;

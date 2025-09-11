@@ -54,4 +54,61 @@ export class ContainerHierarchyResolver {
 
 		return this.recursiveContainerTraversal(container.parentContainer, dependencyToken);
 	}
+
+	public async resolveProviderAsync(dependencyToken: ProviderIdentifier): Promise<unknown> {
+		// First attempt to resolve on the current container
+		const currentContainerResolvedProvider = await this.resolveForContainerAsync(this.container, dependencyToken);
+
+		if (currentContainerResolvedProvider) {
+			return currentContainerResolvedProvider;
+		}
+
+		// If it isn't present, and there's also no parent container, there is nothing more we can do.
+		if (!this.container.parentContainer) {
+			throw new Error(`Dependency ${dependencyToken} not found`);
+		}
+
+		// But if there is a parent container, we can traverse up the hierarchy until we're able to resolve the dependency
+		// Or until we reach the top container and have nothing more to traverse
+		const parentContainerResolvedProvider = await this.recursiveContainerTraversalAsync(
+			this.container.parentContainer,
+			dependencyToken,
+		);
+
+		if (!parentContainerResolvedProvider) {
+			throw new Error(`Dependency ${dependencyToken} not found`);
+		}
+
+		return parentContainerResolvedProvider;
+	}
+
+	private resolveForContainerAsync(
+		container: Container,
+		dependencyToken: ProviderIdentifier,
+	): Promise<unknown> | null {
+		const dependencyEntry = container.containerRepresentation.lookupProviderEntry(dependencyToken);
+
+		if (!dependencyEntry) {
+			return null;
+		}
+
+		return container.resolveAsyncLocalProvider(dependencyToken);
+	}
+
+	private recursiveContainerTraversalAsync(
+		container: Container,
+		dependencyToken: ProviderIdentifier,
+	): Promise<unknown> | null {
+		const currentContainerResolvedProvider = this.resolveForContainerAsync(container, dependencyToken);
+
+		if (currentContainerResolvedProvider) {
+			return currentContainerResolvedProvider;
+		}
+
+		if (!container.parentContainer) {
+			return null;
+		}
+
+		return this.recursiveContainerTraversalAsync(container.parentContainer, dependencyToken);
+	}
 }

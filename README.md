@@ -28,7 +28,7 @@ yarn add modivo
 | **Singleton/Transient Scopes** | ✅ Supported | Singleton and Transient lifecycle management |
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
 | **Provider Override** | ✅ Supported | Be able to override providers (for tests) |
-| **Async Providers** | 🚧 In Development | Async factory functions for async initialization |
+| **Async Providers** | ✅ Supported | Async factory functions for async initialization |
 | **Dependencies via Interfaces** | 📋 Planned | Usage of interface return types |
 | **Lifecycle Methods** | 📋 Planned | Call and hook into lifecycle events of providers (after resolve / before destroy / etc.) |
 | **Circular Dependencies** | 📋 Planned | Support for circular dependencies |

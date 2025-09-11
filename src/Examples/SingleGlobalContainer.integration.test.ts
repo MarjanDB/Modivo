@@ -128,4 +128,18 @@ describe("SingleGlobalContainer", () => {
 		// original container should still have the original value
 		expect(container.resolveProvider(provider.token)).toBe(1);
 	});
+
+	it("supports async providers", async () => {
+		const containerBuilder = ContainerBuilder.create();
+
+		const provider = ProviderTicketMaster.createTicket({
+			identifier: "dependency",
+			asyncFactory: async () => 1,
+		});
+
+		containerBuilder.register(provider);
+		const container = containerBuilder.build();
+		const resolvedValue: number = await container.resolveAsyncProvider(provider);
+		expect(resolvedValue).toBe(1);
+	});
 });
