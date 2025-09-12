@@ -17,7 +17,11 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"suspicious": {
+				// We need it a lot for distributed types, which happen with any but not unknown
+				"noExplicitAny": "off"
+			}
 		}
 	},
 	"javascript": {

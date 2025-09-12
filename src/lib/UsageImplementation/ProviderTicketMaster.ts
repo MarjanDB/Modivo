@@ -140,7 +140,7 @@ export class ProviderTicketForClass<
 	ClassConstructor extends new (
 		...args: any[]
 	) => unknown,
-	ClassInstance extends InstanceType<ClassConstructor>,
+	ReturnType extends InstanceType<ClassConstructor>,
 > {
 	public constructor(
 		public readonly token: Identifier,
@@ -151,7 +151,7 @@ export class ProviderTicketForClass<
 
 	public withScope<NewScope extends ProviderScope>(
 		scope: NewScope,
-	): ProviderTicketForClass<Identifier, NewScope, ClassConstructor, ClassInstance> {
+	): ProviderTicketForClass<Identifier, NewScope, ClassConstructor, ReturnType> {
 		return new ProviderTicketForClass(this.token, scope, this.classConstructor, this.dependencies);
 	}
 
@@ -160,6 +160,15 @@ export class ProviderTicketForClass<
 		dependencies: DependencyTypes<ConstructorParameters<NewClassConstructor>, Identifier>,
 	): ProviderTicketForClass<Identifier, Scope, NewClassConstructor, InstanceType<NewClassConstructor>> {
 		return new ProviderTicketForClass(this.token, this.scope, classConstructor, dependencies);
+	}
+
+	public withReturnType<NewReturnType extends InstanceType<ClassConstructor>>(): ProviderTicketForClass<
+		Identifier,
+		Scope,
+		ClassConstructor,
+		NewReturnType
+	> {
+		return this;
 	}
 }
 
@@ -178,7 +187,7 @@ export type ProviderTicket<Identifier extends ProviderIdentifier, Scope extends 
 			(...args: any[]) => Promise<NonNullable<ReturnType>>,
 			Promise<NonNullable<ReturnType>>
 	  >
-	| ProviderTicketForClass<Identifier, Scope, new (...args: any[]) => any, any>
+	| ProviderTicketForClass<Identifier, Scope, new (...args: any[]) => any, ReturnType>
 	| ProviderTicketForValue<Identifier, Scope, ReturnType>;
 
 export type TypeForRegisteringValue<Value> = {
@@ -206,7 +215,7 @@ export type TypeForRegisteringAsyncFunction<
 };
 
 export type TypeForRegisteringClass<ClassConstructor extends new (...args: any[]) => any> = {
-	identifier: string | symbol | ClassType<unknown>;
+	identifier: string | symbol | ClassType<any>;
 	scope?: ProviderScope;
 	class: ClassConstructor;
 	dependencies?: DependencyTypes<ConstructorParameters<ClassConstructor>, ProviderIdentifier>;

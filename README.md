@@ -29,7 +29,7 @@ yarn add modivo
 | **Parent/Child Container Hierarchy** | ✅ Supported | Nested containers with parent-child relationships |
 | **Provider Override** | ✅ Supported | Be able to override providers (for tests) |
 | **Async Providers** | ✅ Supported | Async factory functions for async initialization |
-| **Dependencies via Interfaces** | 📋 Planned | Usage of interface return types |
+| **Dependencies via Interfaces** | ✅ Supported | Usage of interface return types |
 | **Lifecycle Methods** | 📋 Planned | Call and hook into lifecycle events of providers (after resolve / before destroy / etc.) |
 | **Circular Dependencies** | 📋 Planned | Support for circular dependencies |
 | **Module-like Container Hierarchy** | 📋 Planned | Modular container organization and management (think nestjs) |

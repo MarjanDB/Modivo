@@ -182,4 +182,25 @@ describe("ProviderTicketForClass", () => {
 
 		expect(newClassTicket).toBeInstanceOf(ProviderTicketForClass);
 	});
+
+	it("should support withReturnType method", () => {
+		interface ClassInterface {
+			value: number;
+		}
+
+		class OriginalClass implements ClassInterface {
+			public value = 42;
+		}
+
+		const originalTicket = ProviderTicketMaster.createTicketForClass(
+			new ProviderIdentifierAsString("test"),
+			OriginalClass,
+			[],
+		);
+
+		// Should equal the interface type
+		const newClassTicket = originalTicket.withReturnType<ClassInterface>();
+
+		expect(newClassTicket).toBeInstanceOf(ProviderTicketForClass);
+	});
 });
