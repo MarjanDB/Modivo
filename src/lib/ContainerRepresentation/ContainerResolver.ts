@@ -7,6 +7,10 @@ import {
 	ProviderDefinitionForValue,
 } from "@lib/lib/ProviderRepresentation/ProviderDefinition.js";
 import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+import {
+	isProviderOnResolvedAsync,
+	isProviderOnResolvedSync,
+} from "@lib/lib/ProviderRepresentation/ProviderLifecycles.js";
 
 export class ContainerResolver {
 	public constructor(public readonly container: Container) {}
@@ -28,7 +32,25 @@ export class ContainerResolver {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
-		return new providerDefinition.constructionMethod.classType(...resolvedDependencies);
+		const instance = new providerDefinition.constructionMethod.classType(...resolvedDependencies);
+
+		// Only one should realistically be implemented, defining both is probably a mistake
+
+		if (isProviderOnResolvedSync(instance) && isProviderOnResolvedAsync(instance)) {
+			throw new Error(
+				"Provider on resolved and provider on resolved sync are both implemented. Only one should be implemented.",
+			);
+		}
+
+		if (isProviderOnResolvedSync(instance)) {
+			instance.$afterResolvedSync();
+		}
+
+		if (isProviderOnResolvedAsync(instance)) {
+			instance.$afterResolvedAsync();
+		}
+
+		return instance;
 	}
 
 	private resolveAsyncFactoryProvider(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {

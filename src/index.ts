@@ -12,6 +12,10 @@ export {
 	type ProviderIdentifierAsString,
 	type ProviderIdentifierAsSymbol,
 } from "@lib/lib/ProviderRepresentation/ProviderIdentifierDefinition.js";
+export type {
+	ProviderOnResolvedAsync,
+	ProviderOnResolvedSync,
+} from "@lib/lib/ProviderRepresentation/ProviderLifecycles.js";
 // Provider scope enum - for defining dependency scopes
 export { ProviderScope } from "@lib/lib/ProviderRepresentation/ProviderScope.js";
 export { ContainerBuilder } from "@lib/lib/UsageImplementation/ContainerBuilder.js";
@@ -31,7 +35,6 @@ export type {
 } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
 // Provider ticket master - factory for creating provider tickets
 export { ProviderTicketMaster } from "@lib/lib/UsageImplementation/ProviderTicketMaster.js";
-
 // Utility types
 export type { AbstractClassType, ClassType, ConstructableClassType } from "@lib/utils/ClassType.js";
 export type { Nominal } from "@lib/utils/Nominal.js";

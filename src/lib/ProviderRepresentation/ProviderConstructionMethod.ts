@@ -13,7 +13,7 @@ export class ProviderConstructionMethodForAsyncFactory<FactoryArguments extends 
 }
 
 export class ProviderConstructionMethodForClass<ClassArguments extends unknown[] = unknown[]> {
-	public constructor(public readonly classType: ConstructableClassType<unknown, ClassArguments>) {}
+	public constructor(public readonly classType: ConstructableClassType<any, ClassArguments>) {}
 }
 
 export type ProviderConstructionMethod<FactoryArguments extends unknown[] = unknown[]> =

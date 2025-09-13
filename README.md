@@ -30,7 +30,7 @@ yarn add modivo
 | **Provider Override** | ✅ Supported | Be able to override providers (for tests) |
 | **Async Providers** | ✅ Supported | Async factory functions for async initialization |
 | **Dependencies via Interfaces** | ✅ Supported | Usage of interface return types |
-| **Lifecycle Methods** | 📋 Planned | Call and hook into lifecycle events of providers (after resolve / before destroy / etc.) |
+| **Lifecycle Methods** | 🔄 Implementing | Call and hook into lifecycle events of providers (after resolved / before destroyed / etc.) |
 | **Circular Dependencies** | 📋 Planned | Support for circular dependencies |
 | **Module-like Container Hierarchy** | 📋 Planned | Modular container organization and management (think nestjs) |
 | **Exposed Dependency Resolution Tree** | 📋 Planned | See how providers and dependencies were resolved |

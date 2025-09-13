@@ -12,14 +12,14 @@ export class ProviderIdentifierAsString {
 }
 
 export class ProviderIdentifierAsClass {
-	public constructor(public readonly identifier: ClassType<unknown>) {}
+	public constructor(public readonly identifier: ClassType<any>) {}
 }
 
 export type ProviderIdentifier = ProviderIdentifierAsSymbol | ProviderIdentifierAsString | ProviderIdentifierAsClass;
 
 export type PropertyIdentifier = ProviderIdentifierAsString | ProviderIdentifierAsSymbol;
 
-export function createProviderIdentifier(identifier: string | symbol | ClassType<unknown>): ProviderIdentifier {
+export function createProviderIdentifier(identifier: string | symbol | ClassType<any>): ProviderIdentifier {
 	if (typeof identifier === "string") {
 		return new ProviderIdentifierAsString(identifier);
 	}
