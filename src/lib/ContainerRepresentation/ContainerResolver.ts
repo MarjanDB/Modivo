@@ -16,7 +16,25 @@ export class ContainerResolver {
 	public constructor(public readonly container: Container) {}
 
 	private resolveValueProvider(providerDefinition: ProviderDefinitionForValue): unknown {
-		return providerDefinition.constructionMethod.value;
+		const instance = providerDefinition.constructionMethod.value;
+
+		// Only one should realistically be implemented, defining both is probably a mistake
+		if (isProviderOnResolvedSync(instance) && isProviderOnResolvedAsync(instance)) {
+			throw new Error(
+				"Provider on resolved and provider on resolved sync are both implemented. Only one should be implemented.",
+			);
+		}
+
+		if (isProviderOnResolvedAsync(instance)) {
+			// TODO: This has to be awaited
+			instance.$afterResolvedAsync();
+		}
+
+		if (isProviderOnResolvedSync(instance)) {
+			instance.$afterResolvedSync();
+		}
+
+		return instance;
 	}
 
 	private resolveFactoryProvider(providerDefinition: ProviderDefinitionForFunction): unknown {
@@ -24,7 +42,25 @@ export class ContainerResolver {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
-		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
+		const instance = providerDefinition.constructionMethod.factory(...resolvedDependencies);
+
+		// Only one should realistically be implemented, defining both is probably a mistake
+		if (isProviderOnResolvedSync(instance) && isProviderOnResolvedAsync(instance)) {
+			throw new Error(
+				"Provider on resolved and provider on resolved sync are both implemented. Only one should be implemented.",
+			);
+		}
+
+		if (isProviderOnResolvedAsync(instance)) {
+			// TODO: This has to be awaited
+			instance.$afterResolvedAsync();
+		}
+
+		if (isProviderOnResolvedSync(instance)) {
+			instance.$afterResolvedSync();
+		}
+
+		return instance;
 	}
 
 	private resolveClassProvider(providerDefinition: ProviderDefinitionForClass): unknown {
@@ -35,30 +71,49 @@ export class ContainerResolver {
 		const instance = new providerDefinition.constructionMethod.classType(...resolvedDependencies);
 
 		// Only one should realistically be implemented, defining both is probably a mistake
-
 		if (isProviderOnResolvedSync(instance) && isProviderOnResolvedAsync(instance)) {
 			throw new Error(
 				"Provider on resolved and provider on resolved sync are both implemented. Only one should be implemented.",
 			);
 		}
 
-		if (isProviderOnResolvedSync(instance)) {
-			instance.$afterResolvedSync();
+		if (isProviderOnResolvedAsync(instance)) {
+			// TODO: This has to be awaited
+			instance.$afterResolvedAsync();
 		}
 
-		if (isProviderOnResolvedAsync(instance)) {
-			instance.$afterResolvedAsync();
+		if (isProviderOnResolvedSync(instance)) {
+			instance.$afterResolvedSync();
 		}
 
 		return instance;
 	}
 
-	private resolveAsyncFactoryProvider(providerDefinition: ProviderDefinitionForAsyncFunction): Promise<unknown> {
+	private async resolveAsyncFactoryProvider(
+		providerDefinition: ProviderDefinitionForAsyncFunction,
+	): Promise<unknown> {
 		const resolvedDependencies = providerDefinition.dependencies.map((dependencyToken) => {
 			return this.container.resolveProvider(dependencyToken.dependencyToken);
 		});
 
-		return providerDefinition.constructionMethod.factory(...resolvedDependencies);
+		const instance = await providerDefinition.constructionMethod.factory(...resolvedDependencies);
+
+		// Only one should realistically be implemented, defining both is probably a mistake
+		if (isProviderOnResolvedSync(instance) && isProviderOnResolvedAsync(instance)) {
+			throw new Error(
+				"Provider on resolved and provider on resolved sync are both implemented. Only one should be implemented.",
+			);
+		}
+
+		if (isProviderOnResolvedAsync(instance)) {
+			await instance.$afterResolvedAsync();
+		}
+
+		if (isProviderOnResolvedSync(instance)) {
+			instance.$afterResolvedSync();
+		}
+
+		return instance;
 	}
 
 	public resolveProvider(dependencyToken: ProviderIdentifier): unknown {
