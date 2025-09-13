@@ -10,6 +10,13 @@ export class ContainerRepresentation {
 		private readonly providerLookupForTransientDependencies = new ContainerProviderLookup(),
 	) {}
 
+	public getProvidersByScope(): { [key in ProviderScope]: ContainerProviderLookup } {
+		return {
+			[ProviderScope.SINGLETON]: this.providerLookupForSingletonDependencies,
+			[ProviderScope.TRANSIENT]: this.providerLookupForTransientDependencies,
+		};
+	}
+
 	public registerProvider<FactoryArguments extends unknown[] = unknown[]>(
 		dependencyEntry: ProviderDefinition<FactoryArguments>,
 	): void {

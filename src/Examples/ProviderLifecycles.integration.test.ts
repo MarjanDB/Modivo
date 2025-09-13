@@ -301,4 +301,134 @@ describe("Provider Lifecycles", () => {
 			expect(onResolvedAsyncCallCount).toBe(3); // Lifecycle method called for each instance
 		});
 	});
+
+	describe("resolveEverything and resolveEverythingAsync", () => {
+		it("should resolve all providers and call their lifecycle methods", () => {
+			const containerBuilder = ContainerBuilder.create();
+			let lifecycleCallCount = 0;
+
+			class Service implements ProviderOnResolvedSync {
+				$afterResolvedSync(): void {
+					lifecycleCallCount++;
+				}
+			}
+
+			const provider = ProviderTicketMaster.createTicket({
+				identifier: "service",
+				class: Service,
+			});
+
+			containerBuilder.register(provider);
+			const container = containerBuilder.build();
+
+			expect(lifecycleCallCount).toBe(0);
+			container.resolveEverything();
+			expect(lifecycleCallCount).toBe(1);
+		});
+
+		it("should not call lifecycle methods multiple times for singleton providers", () => {
+			const containerBuilder = ContainerBuilder.create();
+			let lifecycleCallCount = 0;
+
+			class SingletonService implements ProviderOnResolvedSync {
+				$afterResolvedSync(): void {
+					lifecycleCallCount++;
+				}
+			}
+
+			const provider = ProviderTicketMaster.createTicket({
+				identifier: "singletonService",
+				class: SingletonService,
+				scope: ProviderScope.SINGLETON,
+			});
+
+			containerBuilder.register(provider);
+			const container = containerBuilder.build();
+
+			expect(lifecycleCallCount).toBe(0);
+			container.resolveEverything();
+			expect(lifecycleCallCount).toBe(1);
+
+			// Call resolveEverything multiple times
+			container.resolveEverything();
+			container.resolveEverything();
+			container.resolveEverything();
+
+			// Lifecycle method should still only have been called once for singleton
+			expect(lifecycleCallCount).toBe(1);
+		});
+
+		it("should resolve providers across container hierarchy from top down", () => {
+			// Parent container
+			const parentBuilder = ContainerBuilder.create();
+			let parentLifecycleCallCount = 0;
+
+			class ParentService implements ProviderOnResolvedSync {
+				$afterResolvedSync(): void {
+					parentLifecycleCallCount++;
+				}
+			}
+
+			parentBuilder.register(
+				ProviderTicketMaster.createTicket({
+					identifier: "parentService",
+					class: ParentService,
+				}),
+			);
+			const parentContainer = parentBuilder.build();
+
+			// Child container
+			const childBuilder = ContainerBuilder.create();
+			let childLifecycleCallCount = 0;
+
+			class ChildService implements ProviderOnResolvedSync {
+				$afterResolvedSync(): void {
+					childLifecycleCallCount++;
+				}
+			}
+
+			childBuilder.register(
+				ProviderTicketMaster.createTicket({
+					identifier: "childService",
+					class: ChildService,
+				}),
+			);
+			const _childContainer = childBuilder.withParentContainer(parentContainer).build();
+			// Note that calling resolveEverything on a child will only resolve the child (and its children), and not the parent
+			// You should call resolveEverything on the top-most container in the hierarchy to resolve all providers from top down
+			// _childContainer.resolveEverything();
+
+			expect(parentLifecycleCallCount).toBe(0);
+			expect(childLifecycleCallCount).toBe(0);
+
+			// This is the intended usage of resolveEverything (top-most container)
+			parentContainer.resolveEverything();
+
+			expect(parentLifecycleCallCount).toBe(1);
+			expect(childLifecycleCallCount).toBe(1);
+		});
+
+		it("should resolve providers asynchronously", async () => {
+			const containerBuilder = ContainerBuilder.create();
+			let asyncLifecycleCallCount = 0;
+
+			class AsyncService implements ProviderOnResolvedAsync {
+				async $afterResolvedAsync(): Promise<void> {
+					asyncLifecycleCallCount++;
+				}
+			}
+
+			const provider = ProviderTicketMaster.createTicket({
+				identifier: "asyncService",
+				class: AsyncService,
+			});
+
+			containerBuilder.register(provider);
+			const container = containerBuilder.build();
+
+			expect(asyncLifecycleCallCount).toBe(0);
+			await container.resolveEverythingAsync();
+			expect(asyncLifecycleCallCount).toBe(1);
+		});
+	});
 });

@@ -25,6 +25,10 @@ export class ContainerProviderLookup {
 		ProviderDefinitionForClass
 	> = new Map();
 
+	public getProviders(): ReadonlyMap<ProviderIdentifier, ProviderDefinition<unknown[]>> {
+		return this.mapOfDependencyTokenToDependencyEntry;
+	}
+
 	public registerProvider(dependencyEntry: ProviderDefinition<unknown[]>): void {
 		// check if it's already registered
 		if (this.mapOfDependencyTokenToDependencyEntry.has(dependencyEntry.token)) {

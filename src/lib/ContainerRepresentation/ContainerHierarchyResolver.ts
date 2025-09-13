@@ -4,6 +4,30 @@ import type { ProviderIdentifier } from "@lib/lib/ProviderRepresentation/Provide
 export class ContainerHierarchyResolver {
 	public constructor(private readonly container: Container) {}
 
+	public resolveContainer(): void {
+		this.recursiveContainerTraversalForContainerResolution(this.container);
+	}
+
+	private recursiveContainerTraversalForContainerResolution(container: Container): void {
+		container.resolveEverythingLocal();
+
+		for (const childContainer of container.getChildContainers().values()) {
+			this.recursiveContainerTraversalForContainerResolution(childContainer);
+		}
+	}
+
+	public resolveContainerAsync(): Promise<void> {
+		return this.recursiveContainerTraversalForContainerResolutionAsync(this.container);
+	}
+
+	private async recursiveContainerTraversalForContainerResolutionAsync(container: Container): Promise<void> {
+		await container.resolveEverythingLocalAsync();
+
+		for (const childContainer of container.getChildContainers().values()) {
+			await this.recursiveContainerTraversalForContainerResolutionAsync(childContainer);
+		}
+	}
+
 	public resolveProvider(dependencyToken: ProviderIdentifier): unknown {
 		// First attempt to resolve on the current container
 		const currentContainerResolvedProvider = this.resolveForContainer(this.container, dependencyToken);
