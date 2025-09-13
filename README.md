@@ -79,7 +79,7 @@ const db: DatabaseService = container.resolveDependency(dbProvider);
 db.connect(); // "Connecting to https://api.example.com"
 ```
 
-> 📚 **Common usage examples**: See [`src/Examples/`](src/Examples/)
+> 📚 **For complete set of (feature) usage examples, see**: [`src/Examples/`](src/Examples/)
 
 ## Supported Provider Types
 
@@ -102,55 +102,6 @@ db.connect(); // "Connecting to https://api.example.com"
 ---
 ---
 ---
-
-## Advanced Usage
-
-### Custom Identifiers
-```typescript
-import { createProviderIdentifier } from 'modivo';
-
-// You can use strings, symbols, or create typed identifiers
-const stringId = 'database';
-const symbolId = Symbol('database');
-
-const dbProviderUsingStringId = ProviderTicketMaster.createTicket({
-  identifier: stringId,
-  class: DatabaseService
-});
-
-const dbProviderUsingSymbolId = ProviderTicketMaster.createTicket({
-  identifier: symbolId,
-  class: DatabaseService
-});
-```
-
-### Dependency Injection with Parameters
-```typescript
-// First, create provider tickets for dependencies
-const configProvider = ProviderTicketMaster.createTicket({
-  identifier: 'config',
-  value: { smtpHost: 'smtp.example.com' }
-});
-
-const loggerProvider = ProviderTicketMaster.createTicket({
-  identifier: 'logger',
-  factory: () => new Logger()
-});
-
-class EmailService {
-  constructor(
-    private config: Config,
-    private logger: Logger
-  ) {}
-}
-
-// Dependencies array takes provider tickets (not raw values)
-const emailProvider = ProviderTicketMaster.createTicket({
-  identifier: 'emailService',
-  class: EmailService,
-  dependencies: [configProvider, loggerProvider] // These are tickets from createTicket()
-});
-```
 
 ## API Reference
 
